@@ -5,13 +5,13 @@ function App() {
   return (
     <>
     <header>
-      <p>Golfdle | Phaser</p>
+      <p>Puttdle | Phaser</p>
     </header>
     <main>
       <Golfdle />
     </main>
     <footer>
-      Created by Zoli Digness
+      Created by Good Vibes Inc.
     </footer>
     </>
   );
