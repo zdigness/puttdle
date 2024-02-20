@@ -1,4 +1,4 @@
-import Golfdle from './Golfdle'
+import Puttdle from './Puttdle'
 import './App.css'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
       <p>Puttdle | Phaser</p>
     </header>
     <main>
-      <Golfdle />
+      <Puttdle />
     </main>
     <footer>
       Created by Good Vibes Inc.
