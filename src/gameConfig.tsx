@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 const sizes = {
-    width: 1000,
+    width: 700,
     height: 700,
 };
 
