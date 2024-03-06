@@ -7,9 +7,7 @@ function App() {
   const [ user, setUser ] = useState({})
 
   function handleCallbackResponse(response: any) {
-    console.log("Encoded JWT ID token: " + response.credential)
     const decoded = jwtDecode<JwtPayload>(response.credential)
-    console.log("DecodedJWT ID token: " + JSON.stringify(decoded))
     setUser(decoded)
     const loginElement = document.getElementById('login');
     if (loginElement) {
