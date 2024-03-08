@@ -10,6 +10,11 @@ class GameScene extends Phaser.Scene {
     private dragStartPoint: Phaser.Math.Vector2 | null = null; 
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics | null = null;
+    
+    private hole!: Phaser.GameObjects.Graphics;
+    private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(500, 500);
+    private holeRadius: number = 20;
+
     bg!: Phaser.GameObjects.Image;
 
     constructor() {
@@ -23,9 +28,14 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        //Ball
         this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setScale(1);
-        this.hole = this.add.circle(500, 500, 20, 0x000000);
-        this.ball = this.physics.add.sprite(0, 0, 'ball').setOrigin(-5, -5);
+
+        //Hole 
+        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
+        this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+
+        this.ball = this.physics.add.sprite(100, 100, 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
@@ -91,11 +101,33 @@ class GameScene extends Phaser.Scene {
         }
     }
 
+    private respawnBall() {
+        if (this.ball.body instanceof Phaser.Physics.Arcade.Body) {
+            this.ball.body.setVelocity(0, 0);
+            this.ball.body.setAcceleration(0, 0);
+        }
+    
+        const respawnPosition = new Phaser.Math.Vector2(100, 100); // Example respawn position
+        this.ball.setPosition(respawnPosition.x, respawnPosition.y);
+    }
+
     update() {
         if (this.ball && this.ball.body && this.ball.body instanceof Phaser.Physics.Arcade.Body && (this.ball.body as Phaser.Physics.Arcade.Body).speed === 0 && this.ball.body.velocity.x === 0 && this.ball.body.velocity.y === 0) {
             this.ball.body.velocity.set(0, 0); // Fix: Replace 'setVelocity' with 'velocity'
             (this.ball.body as Phaser.Physics.Arcade.Body).setAcceleration(0, 0); // Fix: Add type assertion
             this.ball.body.setDrag(0, 0);
+        }
+
+        // MADE SHOT
+        
+        // Find distance between ball center and hole edge
+        const distanceToHole = Phaser.Math.Distance.Between(
+            this.ball.x, this.ball.y,
+            this.holePosition.x, this.holePosition.y
+        );
+        // Check if the ball's center has reached the edge of the hole
+        if (distanceToHole <= this.holeRadius) {
+            this.respawnBall(); // Call respawnBall method
         }
     }
 }
