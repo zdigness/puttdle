@@ -24,7 +24,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setScale(1);
-        this.add.image(0, 0, 'hole').setOrigin(-10, -10).setScale(1);
+        this.hole = this.add.circle(500, 500, 20, 0x000000);
         this.ball = this.physics.add.sprite(0, 0, 'ball').setOrigin(-5, -5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);

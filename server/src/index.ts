@@ -5,6 +5,16 @@ const PORT = 3000;
 
 app.use(express.json());
 
+const { Pool } = require('pg');
+
+const pool = new Pool ({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'puttdle',
+    password: 'postgrepassword',
+    port: 5432
+})
+
 const cors = require('cors');
 const corsOptions = {
     origin: '*',
