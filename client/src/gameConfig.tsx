@@ -1,8 +1,13 @@
 import Phaser from 'phaser';
 
 const sizes = {
-    width: 700,
-    height: 700,
+    width: window.innerWidth,
+    height: window.innerHeight,
+
+    greenLeft: window.innerWidth,
+    greenRight: window.innerWidth,
+    greenTop: window.innerHeight,
+    greenBottom: window.innerHeight
 };
 
 class GameScene extends Phaser.Scene {
@@ -25,17 +30,25 @@ class GameScene extends Phaser.Scene {
         this.load.image('bg', 'assets/bg.png')
         this.load.image('ball', 'assets/ball.png');
         this.load.image('hole', 'assets/hole1.png');
+        this.load.image('backdrop', 'assets/backdrop.png');
     }
 
     create() {
+
+        this.physics.world.setBounds(200, 200, sizes.width - 360, sizes.height - 360);
+        
         //Ball
-        this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setScale(1);
+        const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
+        maskShape.fillRect(150, 150, 650, 650);
+        const mask = maskShape.createGeometryMask();
+        this.bg = this.add.image(200, 150, 'bg').setOrigin(0, 0).setScale(1);
+        this.bg.setMask(mask);
 
         //Hole 
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.ball = this.physics.add.sprite(100, 100, 'ball').setOrigin(0.5, 0.5);
+        this.ball = this.physics.add.sprite(250, 250, 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
@@ -107,7 +120,7 @@ class GameScene extends Phaser.Scene {
             this.ball.body.setAcceleration(0, 0);
         }
     
-        const respawnPosition = new Phaser.Math.Vector2(100, 100); // Example respawn position
+        const respawnPosition = new Phaser.Math.Vector2(250, 250); // Example respawn position
         this.ball.setPosition(respawnPosition.x, respawnPosition.y);
     }
 
@@ -136,6 +149,7 @@ const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: sizes.width,
     height: sizes.height,
+    backgroundColor: '#1a1a1a',
     parent: 'gameCanvas',
     physics: {
         default: 'arcade',
@@ -144,6 +158,10 @@ const config: Phaser.Types.Core.GameConfig = {
         },
     },
     scene: [GameScene],
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
 };
 
 export default config;
