@@ -23,13 +23,50 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+interface User {
+    email: string;
+}
+
+async function checkUser(user: User) {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT EXISTS (SELECT 1 FROM users WHERE email = $1)', [user]);
+        client.release();
+        return result.rows[0]['exists'];
+    }
+    catch (e) {
+        console.log(e);
+        return null;
+    }
+}
+
+async function createUser(user: User) {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('INSERT INTO users (email) VALUES ($1)', [user]);
+        client.release();
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return null;
+    }
+}
+
 app.get('/', (req, res) => {
     res.send('Hello from server!');
 });
 
-app.post('/api/google-login', (req, res) => {
-    console.log(req.body);
-    res.json({ message: 'Hello from server!' });
+app.post('/api/google-login', async (req, res) => {
+    const user: User = req.body.email;
+    if (await checkUser(user)) {
+        console.log('User exists');
+        res.send('User exists');
+    }
+    else {
+        console.log('User does not exist');
+        res.send(createUser(user));    
+    }
 });
 
 app.listen(PORT, () => {

@@ -16,7 +16,7 @@ function App() {
     if (loginElement) {
       loginElement.hidden = true;
     }
-    handleLoginSuccess(response)
+    handleLoginSuccess(decoded)
   }
 
   function handleLoginSuccess(response: any) {
@@ -25,7 +25,7 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token: 'test' }),
+      body: JSON.stringify(response),
     })
     .then(response => response.json())
     .then(data => {
