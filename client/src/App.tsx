@@ -68,6 +68,7 @@ function App() {
 
   return (
     <>
+    <div id="fuckyou">
     <header>
       <p>Puttdle | Phaser</p>
       <div id="account">
@@ -86,8 +87,9 @@ function App() {
       <Puttdle />
     </main>
     <footer>
-      Created by Good Vibes Inc.
+      <p>Created by Good Vibes Inc.</p>
     </footer>
+    </div>
     </>
   );
 }
