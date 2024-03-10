@@ -16,7 +16,7 @@ function App() {
     if (loginElement) {
       loginElement.hidden = true;
     }
-    handleLoginSuccess(response)
+    handleLoginSuccess(decoded)
   }
 
   function handleLoginSuccess(response: any) {
@@ -25,11 +25,17 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token: 'test' }),
+      body: JSON.stringify(response),
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      const score = document.getElementById('score')
+      const streak = document.getElementById('streak')
+      if (score && streak) {
+        score.textContent = `Score: ${data.scores.total}`
+        streak.textContent = `Streak: ${data.scores.streak}`
+      }
+      console.log('Success:', data)
     })
     .catch((error) => {
       console.error('Error:', error)
@@ -72,13 +78,16 @@ function App() {
     <header>
       <p>Puttdle | Phaser</p>
       <div id="account">
-        { Object.keys(user).length != 0 &&
-          <button onClick = { (e) => hangleSignOut(e) }>Sign Out</button>
-        }
+
         { loggedIn &&
-          <div>
+          <div id='info'>
+            <p id='score'>Score:</p>
+            <p id='streak'>Streak:</p>
             <img id="pfp" src={user.picture} alt={null}/>
           </div>
+        }
+        { Object.keys(user).length != 0 &&
+          <button onClick = { (e) => hangleSignOut(e) }>Sign Out</button>
         }
         <div id="login" data-type="onload"></div>
       </div>

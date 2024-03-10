@@ -86,3 +86,8 @@ p {
   grid-template-rows: repeat(auto-fill, minmax(min-content, 1fr));
   height: 100vh;
 }
+
+#info {
+  display: flex;
+  flex-direction: row;
+}
