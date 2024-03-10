@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
 import config from './gameConfig';
 
-const Golfdle: React.FC = () => {
+const Puttdle: React.FC = () => {
     const gameRef = useRef<Phaser.Game | null>(null);
 
     useEffect(() => {
@@ -19,4 +19,4 @@ const Golfdle: React.FC = () => {
     );
 };
 
-export default Golfdle;
+export default Puttdle;
