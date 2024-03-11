@@ -15,7 +15,7 @@ class GameScene extends Phaser.Scene {
     private dragStartPoint: Phaser.Math.Vector2 | null = null; 
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics | null = null;
-    
+    private maskShape!: Phaser.GameObjects.Graphics;
     private hole!: Phaser.GameObjects.Graphics;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(500, 500);
     private holeRadius: number = 20;
@@ -34,15 +34,9 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-
-        this.physics.world.setBounds(200, 200, sizes.width - 360, sizes.height - 360);
-        
-        //Ball
-        const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
-        maskShape.fillRect(150, 150, 650, 650);
-        const mask = maskShape.createGeometryMask();
-        this.bg = this.add.image(200, 150, 'bg').setOrigin(0, 0).setScale(1);
-        this.bg.setMask(mask);
+        console.log("green")
+        this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setScale(1);
+        this.adjustGreen();
 
         //Hole 
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
@@ -59,6 +53,42 @@ class GameScene extends Phaser.Scene {
         this.input.on('pointermove', this.updateDrag, this);
         this.input.on('pointerup', this.shootBall, this);
     }
+
+    adjustGreen() {
+        // Ensure the background is initialized
+        if (!this.bg) {
+            this.bg = this.add.image(0, 0, 'bg').setOrigin(0, 0).setScale(1);
+        }
+    
+        // Define the visible area for the background in the center of the screen
+        const visibleAreaWidth = this.cameras.main.width * 0.8; // 80% width of the screen for the bg
+        const visibleAreaHeight = this.cameras.main.height; // Full height for the bg
+        const visibleAreaX = (this.cameras.main.width - visibleAreaWidth) / 2;
+        const visibleAreaY = 0; // Starting from the top
+    
+        // Initialize maskShape if it doesn't exist
+        if (!this.maskShape) {
+            this.maskShape = this.make.graphics({ fillStyle: { color: 0x000000 } });
+            // Apply the mask to the background
+            const mask = this.maskShape.createGeometryMask();
+            this.bg.setMask(mask);
+        }
+    
+        // Clear the previous mask shape
+        this.maskShape.clear();
+    
+        // Draw the left bar
+        this.maskShape.fillRect(0, 0, visibleAreaX, this.cameras.main.height);
+    
+        // Draw the right bar
+        this.maskShape.fillRect(visibleAreaX + visibleAreaWidth, 0, this.cameras.main.width - (visibleAreaX + visibleAreaWidth), this.cameras.main.height);
+    
+        // Clear the middle area (visible area for the green)
+        this.maskShape.fillRect(visibleAreaX, visibleAreaY, visibleAreaWidth, visibleAreaHeight);
+
+        this.physics.world.setBounds(visibleAreaX, visibleAreaY, visibleAreaWidth, visibleAreaHeight);
+    }
+    
 
     startDrag(pointer: Phaser.Input.Pointer) {
         if (pointer.leftButtonDown() && this.ball.getBounds().contains(pointer.x, pointer.y)) {
