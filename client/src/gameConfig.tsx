@@ -20,6 +20,10 @@ class GameScene extends Phaser.Scene {
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
 
+    // score
+    private stroke: number = 0;
+    private scoreText!: Phaser.GameObjects.Text;
+
     bg!: Phaser.GameObjects.Image;
 
     constructor() {
@@ -27,27 +31,28 @@ class GameScene extends Phaser.Scene {
     }
 
     preload() {
+        // assets
         this.load.image('bg', 'assets/bg.png')
         this.load.image('ball', 'assets/ball.png');
         this.load.image('hole', 'assets/hole1.png');
-        this.load.image('backdrop', 'assets/backdrop.png');
     }
 
     create() {
-
-        this.physics.world.setBounds(sizes.width / 2 - 300, sizes.height / 2 - 325, 600, 650);
+        // green boundaries
+        this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         
-        //Ball
+        // game background
         this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2 - 5, sizes.height / 2 + 10);
         const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
         maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
-        //Hole 
+        // hole
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
+        // ball
         this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
@@ -55,11 +60,16 @@ class GameScene extends Phaser.Scene {
             this.ball.setInteractive();
         }
 
+        // putting
         this.input.on('pointerdown', this.startDrag, this);
         this.input.on('pointermove', this.updateDrag, this);
         this.input.on('pointerup', this.shootBall, this);
 
+        // screen resizing
         this.scale.on('resize', this.resize, this);
+
+        // score
+        this.scoreText = this.add.text(sizes.width / 2 - 380 , sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '30px', color: '#000000', fontStyle: 'bold', fontFamily: 'Arial', padding: { x: 10, y: 10 }, align: 'center'});
     }
 
     resize() {
@@ -78,7 +88,8 @@ class GameScene extends Phaser.Scene {
 
         this.ball.setPosition(width / 2 - 200, height / 2 - 200);
 
-        this.physics.world.setBounds(width / 2 - 300, height / 2 - 325, 600, 650);
+        this.physics.world.setBounds(width / 2 - 400, height / 2 - 325, 800, 650);
+        this.scoreText.setPosition(width / 2 - 380 , height / 2 - 310);
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
@@ -127,6 +138,9 @@ class GameScene extends Phaser.Scene {
     
             this.ball.body.setDrag(dragForceX, dragForceY);
             }
+
+            this.stroke++;
+            this.scoreText.setText('Strokes: ' + this.stroke);
     
             // Clear drag state
             this.dragStartPoint = null;
@@ -160,6 +174,8 @@ class GameScene extends Phaser.Scene {
         );
         // Check if the ball's center has reached the edge of the hole
         if (distanceToHole <= this.holeRadius) {
+            this.stroke = 0;
+            this.scoreText.setText('Strokes: ' + this.stroke);
             this.respawnBall(); // Call respawnBall method
         }
     }
