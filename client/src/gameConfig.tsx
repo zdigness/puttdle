@@ -17,7 +17,7 @@ class GameScene extends Phaser.Scene {
     private dragLine: Phaser.GameObjects.Graphics | null = null;
     
     private hole!: Phaser.GameObjects.Graphics;
-    private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(500, 500);
+    private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
 
     bg!: Phaser.GameObjects.Image;
@@ -35,20 +35,20 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
-        this.physics.world.setBounds(200, 200, sizes.width - 360, sizes.height - 360);
+        this.physics.world.setBounds(sizes.width / 2 - 300, sizes.height / 2 - 325, 600, 650);
         
         //Ball
+        this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2, sizes.height / 2);
         const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
-        maskShape.fillRect(150, 150, 650, 650);
+        maskShape.fillRect(sizes.width / 2 - 300, sizes.height / 2 - 325, 600, 650);
         const mask = maskShape.createGeometryMask();
-        this.bg = this.add.image(200, 150, 'bg').setOrigin(0, 0).setScale(1);
         this.bg.setMask(mask);
 
         //Hole 
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.ball = this.physics.add.sprite(250, 250, 'ball').setOrigin(0.5, 0.5);
+        this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
