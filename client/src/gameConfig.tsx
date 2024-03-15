@@ -38,9 +38,9 @@ class GameScene extends Phaser.Scene {
         this.physics.world.setBounds(sizes.width / 2 - 300, sizes.height / 2 - 325, 600, 650);
         
         //Ball
-        this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2, sizes.height / 2);
+        this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2 - 5, sizes.height / 2 + 10);
         const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
-        maskShape.fillRect(sizes.width / 2 - 300, sizes.height / 2 - 325, 600, 650);
+        maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
@@ -58,6 +58,27 @@ class GameScene extends Phaser.Scene {
         this.input.on('pointerdown', this.startDrag, this);
         this.input.on('pointermove', this.updateDrag, this);
         this.input.on('pointerup', this.shootBall, this);
+
+        this.scale.on('resize', this.resize, this);
+    }
+
+    resize() {
+        const width = window.innerWidth
+        const height = window.innerHeight
+
+        this.bg.setPosition(width / 2 - 5, height / 2 + 10);
+        const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
+        maskShape.fillRect(width / 2 - 400, height / 2 - 325, 800, 650);
+        const mask = maskShape.createGeometryMask();
+        this.bg.setMask(mask);
+
+        this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
+        this.hole.clear()
+        this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+
+        this.ball.setPosition(width / 2 - 200, height / 2 - 200);
+
+        this.physics.world.setBounds(width / 2 - 300, height / 2 - 325, 600, 650);
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
@@ -120,8 +141,7 @@ class GameScene extends Phaser.Scene {
             this.ball.body.setAcceleration(0, 0);
         }
     
-        const respawnPosition = new Phaser.Math.Vector2(250, 250); // Example respawn position
-        this.ball.setPosition(respawnPosition.x, respawnPosition.y);
+        this.ball.setPosition(window.innerWidth / 2 - 200, window.innerHeight / 2 - 200); // Example respawn position
     }
 
     update() {
