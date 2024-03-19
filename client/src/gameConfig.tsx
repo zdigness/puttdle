@@ -93,6 +93,8 @@ class GameScene extends Phaser.Scene {
 
     win() {
         this.game.events.emit('win', { score: this.stroke });
+        this.stroke = 0;
+        this.scoreText.setText('Strokes: ' + this.stroke);
         // this.modal.setVisible(true);
     }
 
@@ -204,7 +206,6 @@ class GameScene extends Phaser.Scene {
         if (distanceToHole <= this.holeRadius) {
             this.scoreText.setText('Strokes: ' + this.stroke);
             this.win();
-            this.stroke = 0;
             this.respawnBall(); // Call respawnBall method
         }
     }
