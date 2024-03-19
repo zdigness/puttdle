@@ -72,23 +72,6 @@ class GameScene extends Phaser.Scene {
 
         // score
         this.scoreText = this.add.text(sizes.width / 2 - 380 , sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '30px', color: '#000000', fontStyle: 'bold', fontFamily: 'Arial', padding: { x: 10, y: 10 }, align: 'center'});
-
-        // win modal
-        /*
-        this.modal = this.add.container(this.cameras.main.centerX, this.cameras.main.centerY)
-        .add([
-        this.add.rectangle(0, 0, 200, 150, 0xffffff), // Modal background
-        this.add.text(0, -50, "Modal Content", { fontSize: '24px' }), 
-        this.add.text(0, 30, "Close", { color: 'black' })
-            .setInteractive()
-            .on('pointerdown', () => {
-                console.log('close');
-                this.closeModal();
-            })
-        ]);
-        this.modal.setVisible(false);
-        */
-
     }
 
     win() {
@@ -124,7 +107,7 @@ class GameScene extends Phaser.Scene {
 
     startDrag(pointer: Phaser.Input.Pointer) {
         if (pointer.leftButtonDown() && this.ball.getBounds().contains(pointer.x, pointer.y)) {
-            this.dragStartPoint = new Phaser.Math.Vector2(pointer.x, pointer.y);
+            this.dragStartPoint = new Phaser.Math.Vector2(this.ball.x, this.ball.y);
             this.dragLine = this.add.graphics();
         }
     }
@@ -140,12 +123,39 @@ class GameScene extends Phaser.Scene {
         if (this.dragLine && this.dragStartPoint && this.dragEndPoint) {
             this.dragLine.clear();
             this.dragLine.lineStyle(2, 0xffffff); // White line, adjust as needed
-            this.dragLine.strokeLineShape(new Phaser.Geom.Line(
-                this.dragStartPoint.x, 
-                this.dragStartPoint.y, 
-                this.dragEndPoint.x ?? 0, // Add null check and provide a default value
-                this.dragEndPoint.y ?? 0 // Add null check and provide a default value
-            ));
+
+            const distance = Phaser.Math.Distance.Between(this.dragStartPoint.x, this.dragStartPoint.y, this.dragEndPoint.x, this.dragEndPoint.y);
+            const direction = new Phaser.Geom.Point();
+
+            if (distance > 0) {
+                direction.x = (this.dragEndPoint.x - this.dragStartPoint.x) / distance;
+                direction.y = (this.dragEndPoint.y - this.dragStartPoint.y) / distance;
+            }
+
+            // dash calculation values
+            const segmentLength = 10; // Adjust as needed
+            const gapLength = 5; // Adjust as needed
+            const segments = Math.floor(distance / (segmentLength + gapLength));
+
+            // gradient color initial values
+            const red = 255
+            const green = 255
+            const blue = 255
+
+            for (let i = 0; i < segments; i++) {
+                // dash segment
+                const startX = this.dragStartPoint.x + (segmentLength + gapLength) * i * direction.x;
+                const startY = this.dragStartPoint.y + (segmentLength + gapLength) * i * direction.y;
+                const endX = startX + segmentLength * direction.x;
+                const endY = startY + segmentLength * direction.y;
+
+                // gradient color
+                const color = Phaser.Display.Color.GetColor(red, Math.max(green - i * 17, 0), Math.max(blue - i * 17, 0)); // Adjust as needed
+
+                // draw dash segment
+                this.dragLine.lineStyle(2, color, 1);
+                this.dragLine.strokeLineShape(new Phaser.Geom.Line(startX, startY, endX, endY));
+            }
         }
     }
 
