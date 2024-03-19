@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import config from './gameConfig';
+import WinModal from './WinModal';
+import './Puttdle.css';
 
 const Puttdle: React.FC = () => {
     const gameRef = useRef<Phaser.Game | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [score, setScore] = useState(10);
 
     useEffect(() => {
         const game = new Phaser.Game(config);
@@ -14,8 +18,26 @@ const Puttdle: React.FC = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const game = gameRef.current;
+
+        game?.events.on('win', (data: { score: number }) => {
+            console.log('You win! Score:', data.score);
+            setScore(data.score);
+            setIsModalOpen(true);
+        });
+    }
+    , [gameRef]);
+
     return (
-        <div id="gameCanvas"></div>
+        <>
+            <div id="gameCanvas"></div>
+            { isModalOpen &&
+            <div className = "modal__overlay" onClick={() => setIsModalOpen(false)}>
+                <WinModal score={score}/>
+            </div>
+            }
+        </>
     );
 };
 

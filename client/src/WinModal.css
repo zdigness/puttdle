@@ -1,0 +1,11 @@
+.modal__content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the modal */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    color: black;
+    z-index: 1001; /* Slightly above the overlay */
+}
