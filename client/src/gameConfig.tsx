@@ -167,16 +167,10 @@ class GameScene extends Phaser.Scene {
             ).scale(5);
 
             if (this.ball.body instanceof Phaser.Physics.Arcade.Body) {
-            this.ball.body.setVelocity(initialVelocity.x, initialVelocity.y);
+                this.ball.body.setVelocity(initialVelocity.x, initialVelocity.y);
 
-            const dragCoefficient = 0.5;
-            const speed = this.ball.body.speed;
-            const dragForce = speed * dragCoefficient;
-    
-            const dragForceX = dragForce * (Math.abs(this.ball.body.velocity.x) / speed);
-            const dragForceY = dragForce * (Math.abs(this.ball.body.velocity.y) / speed);
-    
-            this.ball.body.setDrag(dragForceX, dragForceY);
+                this.ball.setDamping(true);
+                this.ball.setDrag(0.2);
             }
 
             this.stroke++;
@@ -199,14 +193,22 @@ class GameScene extends Phaser.Scene {
     }
 
     update() {
-        if (this.ball && this.ball.body && this.ball.body instanceof Phaser.Physics.Arcade.Body && (this.ball.body as Phaser.Physics.Arcade.Body).speed === 0 && this.ball.body.velocity.x === 0 && this.ball.body.velocity.y === 0) {
-            this.ball.body.velocity.set(0, 0); // Fix: Replace 'setVelocity' with 'velocity'
-            (this.ball.body as Phaser.Physics.Arcade.Body).setAcceleration(0, 0); // Fix: Add type assertion
-            this.ball.body.setDrag(0, 0);
+        // ball speed
+        const velocityX = this.ball && this.ball.body && this.ball.body.velocity ? Math.abs(this.ball.body.velocity.x) : 0;
+        const velocityY = this.ball && this.ball.body && this.ball.body.velocity ? Math.abs(this.ball.body.velocity.y) : 0;
+
+        // slow ball more once it gets to low velocity
+        if (velocityX < 100 && velocityY < 100) {
+            this.ball.setDamping(true);
+            this.ball.setDrag(0.05);
+        }
+
+        // make ball stop smoother
+        if (velocityX < 10 && velocityY < 10) {
+            this.ball.setVelocity(0, 0);
         }
 
         // MADE SHOT
-        
         // Find distance between ball center and hole edge
         const distanceToHole = Phaser.Math.Distance.Between(
             this.ball.x, this.ball.y,
