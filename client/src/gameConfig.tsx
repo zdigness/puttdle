@@ -89,11 +89,11 @@ class GameScene extends Phaser.Scene {
     private dragStartPoint: Phaser.Math.Vector2 | null = null; 
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics | null = null;
-    
     private hole!: Phaser.GameObjects.Graphics;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
-
+    //create array of previous shots
+    private previousShots: Phaser.Math.Vector2[] = [];
     // score
     private stroke: number = 0;
     private scoreText!: Phaser.GameObjects.Text;
@@ -208,7 +208,7 @@ class GameScene extends Phaser.Scene {
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
-        if (pointer.leftButtonDown() && this.ball.getBounds().contains(pointer.x, pointer.y)) {
+        if (pointer.leftButtonDown() && this.ball && this.ball.getBounds().contains(pointer.x, pointer.y)) {
             this.dragStartPoint = new Phaser.Math.Vector2(this.ball.x, this.ball.y);
             this.dragLine = this.add.graphics();
         }
@@ -275,8 +275,16 @@ class GameScene extends Phaser.Scene {
                 this.ball.setDrag(0.2);
             }
 
+            // reset last position array
+            if (this.stroke === 0) {
+                this.previousShots = [];
+            }
+
             this.stroke++;
             this.scoreText.setText('Strokes: ' + this.stroke);
+            // Append the current ball position to the previousShots array
+            this.previousShots.push(new Phaser.Math.Vector2(this.ball.x, this.ball.y));
+            console.log("Previous shots:", this.previousShots);
     
             // Clear drag state
             this.dragStartPoint = null;
@@ -336,8 +344,9 @@ class GameScene extends Phaser.Scene {
             this.pond.x, this.pond.y
         );
         if (distanceToPond <= this.pond.radius) {
-            //respawn ball just outside of pond
-            this.ball.setPosition(this.ball.x + (this.ball.x - this.pond.x), this.ball.y + (this.ball.y - this.pond.y));
+            //respawn at previous shot location from array
+            const lastPosition = this.previousShots[this.previousShots.length - 1];
+            this.ball.setPosition(lastPosition.x, lastPosition.y);
             this.ball.setVelocity(0, 0);
             this.ball.setAcceleration(0, 0);
             this.stroke++;
