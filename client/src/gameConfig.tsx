@@ -36,6 +36,7 @@ class MovingBarrier {
     height: number;
     right: boolean = true;
     graphics: Phaser.GameObjects.Graphics;
+    sprite: Phaser.Physics.Arcade.Sprite;
 
     constructor(scene: Phaser.Scene, x: number, y: number, height: number, width: number) {
         this.scene = scene;
@@ -46,14 +47,22 @@ class MovingBarrier {
 
         this.graphics = this.scene.add.graphics({ fillStyle: { color: 0x000000 } }); // Black color for hole
         this.graphics.fillRect(this.x, this.y, this.width, this.height);
+
+        this.sprite = this.scene.physics.add.sprite(this.x, this.y, '').setOrigin(0, 0);
+        this.sprite.displayWidth = this.width;
+        this.sprite.displayHeight = this.height;
+        this.sprite.setImmovable(true);
+        this.sprite.visible = false; // Set to true if you want to see the barrier
     }
 
     moveRight() {
         this.graphics.x += 1;
+        this.sprite.x += 1;
     }
 
     moveLeft() {
         this.graphics.x -= 1;
+        this.sprite.x -= 1;
     }
 }
 
@@ -104,7 +113,7 @@ class GameScene extends Phaser.Scene {
         this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
 
         // moving barrier
-        this.movingBarrier = new MovingBarrier(this, 0, sizes.height / 2, 25, 200);
+        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
 
         // hole
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
@@ -115,8 +124,9 @@ class GameScene extends Phaser.Scene {
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
-            this.ball.setInteractive();
         }
+
+        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         // putting
         this.input.on('pointerdown', this.startDrag, this);
@@ -142,6 +152,8 @@ class GameScene extends Phaser.Scene {
     }
 
     resize() {
+        sizes.width = window.innerWidth;
+        sizes.height = window.innerHeight;
         const width = window.innerWidth
         const height = window.innerHeight
 
@@ -150,6 +162,15 @@ class GameScene extends Phaser.Scene {
         maskShape.fillRect(width / 2 - 400, height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
+
+        this.sandtrap.graphics.clear();
+        this.sandtrap.graphics.fillCircle(width / 2 + 250, height / 2 + 150, 50);
+
+        this.movingBarrier.graphics.clear();
+        this.movingBarrier.sprite.destroy();
+        this.movingBarrier = new MovingBarrier(this, width / 2 - 400, height / 2, 25, 200);
+
+        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
         this.hole.clear()
@@ -260,16 +281,10 @@ class GameScene extends Phaser.Scene {
         }
 
         // moving barrier
-        const barrierEnd = Phaser.Math.Distance.Between(
-            this.movingBarrier.graphics.x, this.movingBarrier.graphics.y,
-            this.movingBarrier.graphics.x + this.movingBarrier.width, this.movingBarrier.graphics.y
-        );
-
-
         if (this.movingBarrier.graphics.x <= 0) {
             this.movingBarrier.right = true;
         }
-        if (this.movingBarrier.graphics.x >= sizes.width / 2) {
+        if (this.movingBarrier.graphics.x >= ( (sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
             this.movingBarrier.right = false;
         }
 
