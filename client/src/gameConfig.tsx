@@ -189,7 +189,7 @@ class GameScene extends Phaser.Scene {
         this.sandtrap.graphics.fillCircle(width / 2 + 250, height / 2 + 150, 50);
 
         this.pond.graphics.clear();
-        this.pond.graphics.fillCircle(width / 2 - 200, height / 2 - 200, 50);
+        this.pond.graphics.fillCircle(width / 2 - 100, height / 2 - 100, 50);
 
         this.movingBarrier.graphics.clear();
         this.movingBarrier.sprite.destroy();
