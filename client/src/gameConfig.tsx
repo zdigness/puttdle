@@ -28,6 +28,24 @@ class Sandtrap {
     }
 }
 
+class Pond {
+    private scene: Phaser.Scene;
+    x: number;
+    y: number;
+    radius: number;
+    graphics: Phaser.GameObjects.Graphics;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, radius: number) {
+        this.scene = scene;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+
+        this.graphics = this.scene.add.graphics({ fillStyle: { color: 0x00BFFF } }); // blue color for water
+        this.graphics.fillCircle(this.x, this.y, this.radius);
+    }
+}
+
 class MovingBarrier {
     private scene: Phaser.Scene;
     x: number;
@@ -86,6 +104,7 @@ class GameScene extends Phaser.Scene {
 
     private sandtrap: Sandtrap;
     private movingBarrier: MovingBarrier;
+    private pond: Pond;
 
     constructor() {
         super('game');
@@ -114,6 +133,9 @@ class GameScene extends Phaser.Scene {
 
         // moving barrier
         this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
+
+        // pond
+        this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
 
         // hole
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
@@ -165,6 +187,9 @@ class GameScene extends Phaser.Scene {
 
         this.sandtrap.graphics.clear();
         this.sandtrap.graphics.fillCircle(width / 2 + 250, height / 2 + 150, 50);
+
+        this.pond.graphics.clear();
+        this.pond.graphics.fillCircle(width / 2 - 200, height / 2 - 200, 50);
 
         this.movingBarrier.graphics.clear();
         this.movingBarrier.sprite.destroy();
@@ -304,8 +329,21 @@ class GameScene extends Phaser.Scene {
             this.ball.setDamping(true);
             this.ball.setDrag(0.01);
         }
-        
 
+        // check if in pond
+        const distanceToPond = Phaser.Math.Distance.Between(
+            this.ball.x, this.ball.y,
+            this.pond.x, this.pond.y
+        );
+        if (distanceToPond <= this.pond.radius) {
+            //respawn ball just outside of pond
+            this.ball.setPosition(this.ball.x + (this.ball.x - this.pond.x), this.ball.y + (this.ball.y - this.pond.y));
+            this.ball.setVelocity(0, 0);
+            this.ball.setAcceleration(0, 0);
+            this.stroke++;
+            this.scoreText.setText('Strokes: ' + this.stroke);
+        }
+        
         // make ball stop smoother
         if (velocityX < 10 && velocityY < 10) {
             this.ball.setVelocity(0, 0);
