@@ -10,6 +10,62 @@ const sizes = {
     greenBottom: window.innerHeight
 };
 
+class Sandtrap {
+    private scene: Phaser.Scene;
+    x: number;
+    y: number;
+    radius: number;
+    graphics: Phaser.GameObjects.Graphics;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, radius: number) {
+        this.scene = scene;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+
+        this.graphics = this.scene.add.graphics({ fillStyle: { color: 0xf0e68c } }); // Tan color for sand
+        this.graphics.fillCircle(this.x, this.y, this.radius);
+    }
+}
+
+class MovingBarrier {
+    private scene: Phaser.Scene;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    right: boolean = true;
+    graphics: Phaser.GameObjects.Graphics;
+    sprite: Phaser.Physics.Arcade.Sprite;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, height: number, width: number) {
+        this.scene = scene;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        this.graphics = this.scene.add.graphics({ fillStyle: { color: 0x000000 } }); // Black color for hole
+        this.graphics.fillRect(this.x, this.y, this.width, this.height);
+
+        this.sprite = this.scene.physics.add.sprite(this.x, this.y, '').setOrigin(0, 0);
+        this.sprite.displayWidth = this.width;
+        this.sprite.displayHeight = this.height;
+        this.sprite.setImmovable(true);
+        this.sprite.visible = false; // Set to true if you want to see the barrier
+    }
+
+    moveRight() {
+        this.graphics.x += 1;
+        this.sprite.x += 1;
+    }
+
+    moveLeft() {
+        this.graphics.x -= 1;
+        this.sprite.x -= 1;
+    }
+}
+
 class GameScene extends Phaser.Scene {
     private ball!: Phaser.Physics.Arcade.Sprite;
     private dragStartPoint: Phaser.Math.Vector2 | null = null; 
@@ -27,6 +83,9 @@ class GameScene extends Phaser.Scene {
     bg!: Phaser.GameObjects.Image;
 
     private modal!: Phaser.GameObjects.Container;
+
+    private sandtrap: Sandtrap;
+    private movingBarrier: MovingBarrier;
 
     constructor() {
         super('game');
@@ -50,6 +109,12 @@ class GameScene extends Phaser.Scene {
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
+        // sand traps
+        this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
+
+        // moving barrier
+        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
+
         // hole
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
@@ -59,8 +124,9 @@ class GameScene extends Phaser.Scene {
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
-            this.ball.setInteractive();
         }
+
+        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         // putting
         this.input.on('pointerdown', this.startDrag, this);
@@ -86,6 +152,8 @@ class GameScene extends Phaser.Scene {
     }
 
     resize() {
+        sizes.width = window.innerWidth;
+        sizes.height = window.innerHeight;
         const width = window.innerWidth
         const height = window.innerHeight
 
@@ -94,6 +162,15 @@ class GameScene extends Phaser.Scene {
         maskShape.fillRect(width / 2 - 400, height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
+
+        this.sandtrap.graphics.clear();
+        this.sandtrap.graphics.fillCircle(width / 2 + 250, height / 2 + 150, 50);
+
+        this.movingBarrier.graphics.clear();
+        this.movingBarrier.sprite.destroy();
+        this.movingBarrier = new MovingBarrier(this, width / 2 - 400, height / 2, 25, 200);
+
+        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
         this.hole.clear()
@@ -202,6 +279,32 @@ class GameScene extends Phaser.Scene {
             this.ball.setDamping(true);
             this.ball.setDrag(0.05);
         }
+
+        // moving barrier
+        if (this.movingBarrier.graphics.x <= 0) {
+            this.movingBarrier.right = true;
+        }
+        if (this.movingBarrier.graphics.x >= ( (sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
+            this.movingBarrier.right = false;
+        }
+
+        if (this.movingBarrier.right) {
+            this.movingBarrier.moveRight();
+        }
+        else {
+            this.movingBarrier.moveLeft();
+        }
+
+        // check if on sand trap
+        const distanceToSandtrap = Phaser.Math.Distance.Between(
+            this.ball.x, this.ball.y,
+            this.sandtrap.x, this.sandtrap.y
+        );
+        if (distanceToSandtrap <= this.sandtrap.radius) {
+            this.ball.setDamping(true);
+            this.ball.setDrag(0.01);
+        }
+        
 
         // make ball stop smoother
         if (velocityX < 10 && velocityY < 10) {
