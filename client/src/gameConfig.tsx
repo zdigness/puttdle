@@ -269,8 +269,6 @@ class GameScene extends Phaser.Scene {
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
-        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
-
         this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
         this.hole.clear()
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
@@ -294,6 +292,9 @@ class GameScene extends Phaser.Scene {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
         }
+
+        this.movingBarrier.setCollision(this.ball);
+        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
