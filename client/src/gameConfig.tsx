@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import WebFont from 'webfontloader';
 
 const sizes = {
     width: window.innerWidth,
@@ -115,6 +116,17 @@ class GameScene extends Phaser.Scene {
         this.load.image('bg', 'assets/bg.png')
         this.load.image('ball', 'assets/ball.png');
         this.load.image('hole', 'assets/hole1.png');
+
+        // fonts
+        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        //this.load.css('bangers', 'fonts/bangers.css');
+
+        WebFont.load({
+            custom: {
+                families: ['Bangers'],
+                urls: ['fonts/bangers.css']
+            }
+        });
     }
 
     create() {
@@ -159,7 +171,7 @@ class GameScene extends Phaser.Scene {
         this.scale.on('resize', this.resize, this);
 
         // score
-        this.scoreText = this.add.text(sizes.width / 2 - 380 , sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '30px', color: '#000000', fontStyle: 'bold', fontFamily: 'Arial', padding: { x: 10, y: 10 }, align: 'center'});
+        this.scoreText = this.add.text(sizes.width / 2 - 380 , sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center'});
     }
 
     win() {
