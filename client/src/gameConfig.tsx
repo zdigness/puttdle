@@ -64,33 +64,28 @@ class MovingBarrier {
         // hitting side of barrier while ball is moving
         if (ball.body && (ball.body.velocity.x !== 0 || ball.body.velocity.y !== 0)) {
             if (ball.body.touching.right) {
-                ball.body.velocity.x = -500;
+                ball.body.velocity.x = -300;
+                ball.body.velocity.y = -300;
             }
             else if (ball.body.touching.left) {
-                ball.body.velocity.x = 500;
-            }
-
-            if (ball.body.y <= this.y) {
-                ball.body.velocity.y = -500;
-            }
-            else {
-                ball.body.velocity.y = 500;
+                ball.body.velocity.x = 300;
+                ball.body.velocity.y = 300;
             }
         }
 
         if (ball.body && ball.body.velocity.x === 0 && ball.body.velocity.y === 0) {
             if (this.right) {
-                ball.body.velocity.x = 500;
+                ball.body.velocity.x = 300;
             }
             else {
-                ball.body.velocity.x = -500;
+                ball.body.velocity.x = -300;
             }
 
             if (ball.body.y < this.y) {
-                ball.body.velocity.y = -500;
+                ball.body.velocity.y = -300;
             }
             else {
-                ball.body.velocity.y = 500;
+                ball.body.velocity.y = 300;
             }
         }
     }
@@ -99,33 +94,33 @@ class MovingBarrier {
         // hitting side of barrier while ball is moving
         if (ball.body && (ball.body.velocity.x !== 0 || ball.body.velocity.y !== 0)) {
             if (ball.body.touching.right) {
-                ball.body.velocity.x = 500;
+                ball.body.velocity.x = 300;
             }
             else if (ball.body.touching.left) {
-                ball.body.velocity.x = -500;
+                ball.body.velocity.x = -300;
             }
 
             if (ball.body.y <= this.y) {
-                ball.body.velocity.y = -500;
+                ball.body.velocity.y = -300;
             }
             else {
-                ball.body.velocity.y = 500;
+                ball.body.velocity.y = 300;
             }
         }
 
         if (ball.body && ball.body.velocity.x === 0 && ball.body.velocity.y === 0) {
             if (this.right) {
-                ball.body.velocity.x = -500;
+                ball.body.velocity.x = -300;
             }
             else {
-                ball.body.velocity.x = 500;
+                ball.body.velocity.x = 300;
             }
 
             if (ball.body.y < this.y) {
-                ball.body.velocity.y = -500;
+                ball.body.velocity.y = -300;
             }
             else {
-                ball.body.velocity.y = 500;
+                ball.body.velocity.y = 300;
             }
         }
     }
