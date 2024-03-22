@@ -232,7 +232,6 @@ class GameScene extends Phaser.Scene {
 
         // collision
         this.movingBarrier.setCollision(this.ball);
-
         this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         // putting
@@ -270,26 +269,31 @@ class GameScene extends Phaser.Scene {
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
-        this.sandtrap.graphics.clear();
-        this.sandtrap.graphics.fillCircle(width / 2 + 250, height / 2 + 150, 50);
-
-        this.pond.graphics.clear();
-        this.pond.graphics.fillCircle(width / 2 - 100, height / 2 - 100, 50);
-
-        this.movingBarrier.graphics.clear();
-        this.movingBarrier.sprite.destroy();
-        this.movingBarrier = new MovingBarrier(this, width / 2 - 400, height / 2, 25, 200);
-
         this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
         this.hole.clear()
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.ball.setPosition(width / 2 - 200, height / 2 - 200);
-
         this.physics.world.setBounds(width / 2 - 400, height / 2 - 325, 800, 650);
         this.scoreText.setPosition(width / 2 - 380 , height / 2 - 310);
+
+        this.sandtrap.graphics.clear();
+        this.sandtrap = new Sandtrap(this, width / 2 + 250, height / 2 + 150, 50);
+
+        this.pond.graphics.clear();
+        this.pond = new Pond(this, width / 2 - 100, height / 2 - 100, 50);
+
+        this.movingBarrier.graphics.clear();
+        this.movingBarrier.sprite.destroy();
+        this.movingBarrier = new MovingBarrier(this, width / 2 - 400, height / 2, 25, 200);
+
+        this.ball.destroy();
+        this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
+        if (this.ball) {
+            this.ball.setCollideWorldBounds(true);
+            this.ball.setBounce(1);
+        }
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
