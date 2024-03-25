@@ -1,7 +1,6 @@
-import React from 'react';
 import './Welcome.css';
 
-function Welcome({isWelcome, onPlayToggle}) {
+function Welcome({isWelcome, onPlayToggle}: {isWelcome: boolean, onPlayToggle: () => void}) {
     return (
         <>
         <div className="container">
