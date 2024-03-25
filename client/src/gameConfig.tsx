@@ -157,8 +157,8 @@ class MovingBarrier {
 
 class GameScene extends Phaser.Scene {
     private ball: Phaser.Physics.Arcade.Sprite;
-    private dragStartPoint: Phaser.Math.Vector2; 
-    private dragEndPoint: Phaser.Math.Vector2;
+    private dragStartPoint: Phaser.Math.Vector2 | null = null; 
+    private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics;
     private hole: Phaser.GameObjects.Graphics;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
