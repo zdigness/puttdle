@@ -92,7 +92,6 @@ function App() {
                 <div id='info'>
                   <p id='score'>Score:</p>
                   <p id='streak'>Streak:</p>
-                  <img id="pfp" src={user.picture} alt={null} />
                 </div>
               }
               {Object.keys(user).length != 0 &&
