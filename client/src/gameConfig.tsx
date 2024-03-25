@@ -156,24 +156,24 @@ class MovingBarrier {
 }
 
 class GameScene extends Phaser.Scene {
-    private ball: Phaser.Physics.Arcade.Sprite;
+    private ball: Phaser.Physics.Arcade.Sprite | null = null;
     private dragStartPoint: Phaser.Math.Vector2 | null = null;
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
-    private dragLine: Phaser.GameObjects.Graphics;
-    private hole: Phaser.GameObjects.Graphics;
+    private dragLine: Phaser.GameObjects.Graphics | null = null;
+    private hole: Phaser.GameObjects.Graphics | null = null;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
     //create array of previous shots
     private previousShots: Phaser.Math.Vector2[] = [];
     // score
     private stroke: number = 0;
-    private scoreText: Phaser.GameObjects.Text;
+    private scoreText: Phaser.GameObjects.Text | null = null;
 
     bg!: Phaser.GameObjects.Image;
 
-    private sandtrap: Sandtrap;
-    private movingBarrier: MovingBarrier;
-    private pond: Pond;
+    private sandtrap: Sandtrap | null = null;
+    private movingBarrier: MovingBarrier | null = null;
+    private pond: Pond | null = null;
 
     constructor() {
         super('game');
@@ -241,13 +241,13 @@ class GameScene extends Phaser.Scene {
         this.scale.on('resize', this.resize, this);
 
         // score
-        this.scoreText = this.add.text(sizes.width / 2 - 380, sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center' });
+        this.scoreText = this.add.text(sizes.width / 2 - 380, sizes.height / 2 - 310, 'Stroke: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center' });
     }
 
     win() {
         this.game.events.emit('win', { score: this.stroke });
         this.stroke = 0;
-        this.scoreText.setText('Strokes: ' + this.stroke);
+        this.scoreText?.setText('Stroke: ' + this.stroke);
     }
 
     resize() {
@@ -264,22 +264,22 @@ class GameScene extends Phaser.Scene {
         this.bg.setMask(mask);
 
         this.holePosition = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
-        this.hole.clear()
-        this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+        this.hole?.clear()
+        this.hole?.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.scoreText.setPosition(sizes.width / 2 - 380, sizes.height / 2 - 310);
+        this.scoreText?.setPosition(sizes.width / 2 - 380, sizes.height / 2 - 310);
 
-        this.sandtrap.graphics.clear();
+        this.sandtrap?.graphics.clear();
         this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
 
-        this.pond.graphics.clear();
+        this.pond?.graphics.clear();
         this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
 
-        this.movingBarrier.graphics.clear();
-        this.movingBarrier.sprite.destroy();
+        this.movingBarrier?.graphics.clear();
+        this.movingBarrier?.sprite.destroy();
         this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
 
-        this.ball.destroy();
+        this.ball?.destroy();
         this.ball = this.physics.add.sprite(Math.round(sizes.width / 2 - 200), Math.round(sizes.height / 2 - 200), 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
@@ -360,7 +360,7 @@ class GameScene extends Phaser.Scene {
                 this.dragStartPoint.y - this.dragEndPoint.y
             ).scale(5);
     
-            if (this.ball.body instanceof Phaser.Physics.Arcade.Body) {
+            if (this.ball?.body instanceof Phaser.Physics.Arcade.Body) {
                 this.ball.body.setVelocity(initialVelocity.x, initialVelocity.y);
     
                 this.ball.setDamping(true);
@@ -373,25 +373,25 @@ class GameScene extends Phaser.Scene {
             }
     
             this.stroke++;
-            this.scoreText.setText('Strokes: ' + this.stroke);
+            this.scoreText?.setText('Stroke: ' + this.stroke);
             // Append the current ball position to the previousShots array
-            this.previousShots.push(new Phaser.Math.Vector2(this.ball.x, this.ball.y));
+            this.previousShots.push(new Phaser.Math.Vector2(this.ball?.x, this.ball?.y));
             console.log("Previous shots:", this.previousShots);
     
             // Clear drag state
             this.dragStartPoint = null;
             this.dragEndPoint = null;
-            this.dragLine.destroy();
+            this.dragLine?.destroy();
         }
     }
 
     private respawnBall() {
-        if (this.ball.body instanceof Phaser.Physics.Arcade.Body) {
+        if (this.ball?.body instanceof Phaser.Physics.Arcade.Body) {
             this.ball.body.setVelocity(0, 0);
             this.ball.body.setAcceleration(0, 0);
         }
 
-        this.ball.setPosition(window.innerWidth / 2 - 200, window.innerHeight / 2 - 200); // Example respawn position
+        this.ball?.setPosition(window.innerWidth / 2 - 200, window.innerHeight / 2 - 200); // Example respawn position
     }
 
     update() {
@@ -401,66 +401,75 @@ class GameScene extends Phaser.Scene {
 
         // slow ball more once it gets to low velocity
         if (velocityX < 100 && velocityY < 100) {
-            this.ball.setDamping(true);
-            this.ball.setDrag(0.05);
+            this.ball?.setDamping(true);
+            this.ball?.setDrag(0.05);
         }
 
         // moving barrier
-        if (this.movingBarrier.graphics.x <= 0) {
-            this.movingBarrier.right = true;
-        }
-        if (this.movingBarrier.graphics.x >= ((sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
-            this.movingBarrier.right = false;
-        }
-
-        if (this.movingBarrier.right) {
-            this.movingBarrier.moveRight();
-        }
-        else {
-            this.movingBarrier.moveLeft();
+        if (this.movingBarrier && this.movingBarrier.graphics) {
+            if (this.movingBarrier.graphics.x <= 0) {
+                this.movingBarrier.right = true;
+            }
+            if (this.movingBarrier.graphics.x >= ((sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
+                this.movingBarrier.right = false;
+            }
+            if (this.movingBarrier.right) {
+                this.movingBarrier.moveRight();
+            } else {
+                this.movingBarrier.moveLeft();
+            }
         }
 
         // check if on sand trap
-        const distanceToSandtrap = Phaser.Math.Distance.Between(
-            this.ball.x, this.ball.y,
-            this.sandtrap.x, this.sandtrap.y
-        );
-        if (distanceToSandtrap <= this.sandtrap.radius) {
-            this.ball.setDamping(true);
-            this.ball.setDrag(0.01);
+        if (this.ball && this.sandtrap) {
+            const distanceToSandtrap = Phaser.Math.Distance.Between(
+                this.ball.x, this.ball.y,
+                this.sandtrap.x, this.sandtrap.y
+            );
+            if (distanceToSandtrap <= this.sandtrap.radius) {
+                this.ball.setDamping(true);
+                this.ball.setDrag(0.01);
+            }
         }
 
         // check if in pond
-        const distanceToPond = Phaser.Math.Distance.Between(
-            this.ball.x, this.ball.y,
-            this.pond.x, this.pond.y
-        );
-        if (distanceToPond <= this.pond.radius) {
-            //respawn at previous shot location from array
-            const lastPosition = this.previousShots[this.previousShots.length - 1];
-            this.ball.setPosition(lastPosition.x, lastPosition.y);
-            this.ball.setVelocity(0, 0);
-            this.ball.setAcceleration(0, 0);
-            this.stroke++;
-            this.scoreText.setText('Strokes: ' + this.stroke);
+        if (this.ball && this.pond) {
+            const distanceToPond = Phaser.Math.Distance.Between(
+                this.ball.x, this.ball.y,
+                this.pond.x, this.pond.y
+            );
+            if (distanceToPond <= this.pond.radius) {
+                //respawn at previous shot location from array
+                if (this.previousShots.length > 0) {
+                    const lastPosition = this.previousShots[this.previousShots.length - 1];
+                    this.ball.setPosition(lastPosition.x, lastPosition.y);
+                    this.ball.setVelocity(0, 0);
+                    this.ball.setAcceleration(0, 0);
+                    this.stroke++;
+                    this.scoreText?.setText('Stroke: ' + this.stroke);
+                }
+            }
         }
 
         // make ball stop smoother
         if (velocityX < 10 && velocityY < 10) {
-            this.ball.setVelocity(0, 0);
+            this.ball?.setVelocity(0, 0);
         }
 
         // MADE SHOT
         // Find distance between ball center and hole edge
-        const distanceToHole = Phaser.Math.Distance.Between(
-            this.ball.x, this.ball.y,
-            this.holePosition.x, this.holePosition.y
-        );
-        // Check if the ball's center has reached the edge of the hole
-        if (distanceToHole <= this.holeRadius) {
-            this.scoreText.setText('Strokes: ' + this.stroke);
-            this.win();
-            this.respawnBall(); // Call respawnBall method
+        if (this.ball) {
+            // Find distance between ball center and hole edge
+            const distanceToHole = Phaser.Math.Distance.Between(
+                this.ball.x, this.ball.y,
+                this.holePosition.x, this.holePosition.y
+            );
+            // Check if the ball's center has reached the edge of the hole
+            if (distanceToHole <= this.holeRadius) {
+                this.scoreText?.setText('Stroke: ' + this.stroke);
+                this.win();
+                this.respawnBall(); // Call respawnBall method
+            }
         }
     }
 }
