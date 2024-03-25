@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import Puttdle from './Puttdle'
 import { jwtDecode, JwtPayload } from 'jwt-decode';
@@ -70,7 +71,7 @@ function App() {
         text: 'continue_with',
       }
     )
-  }, [])
+  })
 
   const onPlayToggle = () => {
     setIsWelcome(false)
