@@ -156,22 +156,20 @@ class MovingBarrier {
 }
 
 class GameScene extends Phaser.Scene {
-    private ball!: Phaser.Physics.Arcade.Sprite;
-    private dragStartPoint: Phaser.Math.Vector2 | null = null; 
-    private dragEndPoint: Phaser.Math.Vector2 | null = null;
-    private dragLine: Phaser.GameObjects.Graphics | null = null;
-    private hole!: Phaser.GameObjects.Graphics;
+    private ball: Phaser.Physics.Arcade.Sprite;
+    private dragStartPoint: Phaser.Math.Vector2; 
+    private dragEndPoint: Phaser.Math.Vector2;
+    private dragLine: Phaser.GameObjects.Graphics;
+    private hole: Phaser.GameObjects.Graphics;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
     //create array of previous shots
     private previousShots: Phaser.Math.Vector2[] = [];
     // score
     private stroke: number = 0;
-    private scoreText!: Phaser.GameObjects.Text;
+    private scoreText: Phaser.GameObjects.Text;
 
     bg!: Phaser.GameObjects.Image;
-
-    private modal!: Phaser.GameObjects.Container;
 
     private sandtrap: Sandtrap;
     private movingBarrier: MovingBarrier;
@@ -250,44 +248,39 @@ class GameScene extends Phaser.Scene {
         this.game.events.emit('win', { score: this.stroke });
         this.stroke = 0;
         this.scoreText.setText('Strokes: ' + this.stroke);
-        // this.modal.setVisible(true);
-    }
-
-    closeModal() {
-        this.modal.setVisible(false);
     }
 
     resize() {
         sizes.width = window.innerWidth;
         sizes.height = window.innerHeight;
-        const width = window.innerWidth
-        const height = window.innerHeight
 
-        this.bg.setPosition(width / 2 - 5, height / 2 + 10);
+        this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
+
+        this.bg.setPosition(Math.round(sizes.width / 2 - 5), Math.round(sizes.height / 2 + 10));
         const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
-        maskShape.fillRect(width / 2 - 400, height / 2 - 325, 800, 650);
+        maskShape.clear(); // Clear any previous mask drawing 
+        maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
-        this.holePosition = new Phaser.Math.Vector2(width / 2 + 100, height / 2 + 100);
+        this.holePosition = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
         this.hole.clear()
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.physics.world.setBounds(width / 2 - 400, height / 2 - 325, 800, 650);
-        this.scoreText.setPosition(width / 2 - 380 , height / 2 - 310);
+        this.scoreText.setPosition(sizes.width / 2 - 380 , sizes.height / 2 - 310);
 
         this.sandtrap.graphics.clear();
-        this.sandtrap = new Sandtrap(this, width / 2 + 250, height / 2 + 150, 50);
+        this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
 
         this.pond.graphics.clear();
-        this.pond = new Pond(this, width / 2 - 100, height / 2 - 100, 50);
+        this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
 
         this.movingBarrier.graphics.clear();
         this.movingBarrier.sprite.destroy();
-        this.movingBarrier = new MovingBarrier(this, width / 2 - 400, height / 2, 25, 200);
+        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
 
         this.ball.destroy();
-        this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
+        this.ball = this.physics.add.sprite(Math.round(sizes.width / 2 - 200), Math.round(sizes.height / 2 - 200), 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
@@ -327,7 +320,7 @@ class GameScene extends Phaser.Scene {
             // dash calculation values
             const segmentLength = 10; // Adjust as needed
             const gapLength = 5; // Adjust as needed
-            const segments = Math.floor(distance / (segmentLength + gapLength));
+            const segments = distance / (segmentLength + gapLength);
 
             // gradient color initial values
             const red = 255
@@ -346,7 +339,10 @@ class GameScene extends Phaser.Scene {
 
                 // draw dash segment
                 this.dragLine.lineStyle(2, color, 1);
-                this.dragLine.strokeLineShape(new Phaser.Geom.Line(startX, startY, endX, endY));
+                this.dragLine.beginPath();
+                this.dragLine.moveTo(startX, startY);
+                this.dragLine.lineTo(endX, endY);
+                this.dragLine.strokePath();
             }
         }
     }
@@ -379,7 +375,7 @@ class GameScene extends Phaser.Scene {
             // Clear drag state
             this.dragStartPoint = null;
             this.dragEndPoint = null;
-            this.dragLine?.destroy();
+            this.dragLine.destroy();
         }
     }
 
@@ -479,6 +475,9 @@ const config: Phaser.Types.Core.GameConfig = {
     scale: {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
+    },
+    render: {
+        pixelArt: true,
     },
 };
 
