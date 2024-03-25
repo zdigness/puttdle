@@ -79,6 +79,12 @@ header {
 
 p {
   z-index: 1;
+  font-family: bangers;
+}
+
+.title {
+  font-size: 3rem;
+  font-family: bangers;
 }
 
 #fuckyou {
