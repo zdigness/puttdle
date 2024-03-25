@@ -1,22 +1,22 @@
 import React from 'react';
 import './Welcome.css';
 
-function Welcome() {
+function Welcome({isWelcome, onPlayToggle}) {
     return (
-        <div className="Welcome">
-        <header className="Welcome-header">
-            <p>
-            Welcome to Puttdle!
-            </p>
-            <a
-            className="Welcome-link"
-            href="http://localhost:3000/api/google-login"
-            rel="noopener noreferrer"
-            >
-            Login with Google
-            </a>
-        </header>
+        <>
+        <div className="container">
+            <div className="welcome">
+                <h1>PUTTDLE!</h1>
+                <p>New courses everyday</p>
+                <p>make your shots in the least strokes possible!</p>
+            </div>
+            <div className="play">
+                <button className="playbutton" onClick={onPlayToggle}>
+                    {isWelcome ? 'Play' : 'Back'}
+                </button>
+            </div>
         </div>
+        </>
     );
 }
 

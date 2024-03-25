@@ -3,9 +3,10 @@ import Puttdle from './Puttdle'
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import './App.css'
 import React from 'react';
+import Welcome from './Welcome';
 
 function App() {
-
+  const [isWelcome, setIsWelcome] = useState(true)
   const [user, setUser] = useState({})
   const [loggedIn, setLoggedIn] = useState(false)
 
@@ -72,9 +73,17 @@ function App() {
     )
   }, [])
 
+  const onPlayToggle = () => {
+    setIsWelcome(false)
+  }
+
   return (
     <>
-      <div id="fuckyou">
+    {isWelcome ?(
+      <Welcome isWelcome={isWelcome} onPlayToggle={onPlayToggle} />
+    ) : (
+    <div>
+      <div id="puttdle">
         <header>
             <p className="title">Puttdle!</p>
             <div id="account">
@@ -99,6 +108,8 @@ function App() {
           <p>Created by Good Vibes Inc.</p>
         </footer>
       </div>
+    </div>
+    )}
     </>
   );
 }
