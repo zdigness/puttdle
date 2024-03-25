@@ -157,7 +157,7 @@ class MovingBarrier {
 
 class GameScene extends Phaser.Scene {
     private ball: Phaser.Physics.Arcade.Sprite;
-    private dragStartPoint: Phaser.Math.Vector2 | null = null; 
+    private dragStartPoint: Phaser.Math.Vector2 | null = null;
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics;
     private hole: Phaser.GameObjects.Graphics;
@@ -200,10 +200,10 @@ class GameScene extends Phaser.Scene {
     create() {
         // green boundaries
         this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
-        
+
         // game background
         this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2 - 5, sizes.height / 2 + 10);
-        const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
+        const maskShape = this.make.graphics({ fillStyle: { color: 0x000000 } });
         maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
@@ -241,7 +241,7 @@ class GameScene extends Phaser.Scene {
         this.scale.on('resize', this.resize, this);
 
         // score
-        this.scoreText = this.add.text(sizes.width / 2 - 380 , sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center'});
+        this.scoreText = this.add.text(sizes.width / 2 - 380, sizes.height / 2 - 310, 'Strokes: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center' });
     }
 
     win() {
@@ -257,7 +257,7 @@ class GameScene extends Phaser.Scene {
         this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
 
         this.bg.setPosition(Math.round(sizes.width / 2 - 5), Math.round(sizes.height / 2 + 10));
-        const maskShape = this.make.graphics({fillStyle: {color: 0x000000}});
+        const maskShape = this.make.graphics({ fillStyle: { color: 0x000000 } });
         maskShape.clear(); // Clear any previous mask drawing 
         maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
         const mask = maskShape.createGeometryMask();
@@ -267,7 +267,7 @@ class GameScene extends Phaser.Scene {
         this.hole.clear()
         this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
-        this.scoreText.setPosition(sizes.width / 2 - 380 , sizes.height / 2 - 310);
+        this.scoreText.setPosition(sizes.width / 2 - 380, sizes.height / 2 - 310);
 
         this.sandtrap.graphics.clear();
         this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
@@ -291,7 +291,13 @@ class GameScene extends Phaser.Scene {
     }
 
     startDrag(pointer: Phaser.Input.Pointer) {
-        if (pointer.leftButtonDown() && this.ball && this.ball.getBounds().contains(pointer.x, pointer.y)) {
+        if (
+            pointer.leftButtonDown() &&
+            this.ball &&
+            this.ball.getBounds().contains(pointer.x, pointer.y) &&
+            this.ball.body instanceof Phaser.Physics.Arcade.Body &&
+            this.ball.body.velocity.length() === 0
+        ) {
             this.dragStartPoint = new Phaser.Math.Vector2(this.ball.x, this.ball.y);
             this.dragLine = this.add.graphics();
         }
@@ -300,7 +306,7 @@ class GameScene extends Phaser.Scene {
     updateDrag(pointer: Phaser.Input.Pointer) {
         if (this.dragStartPoint) {
             this.dragEndPoint = new Phaser.Math.Vector2(pointer.x, pointer.y);
-            this.drawDragLine(); 
+            this.drawDragLine();
         }
     }
 
@@ -351,21 +357,21 @@ class GameScene extends Phaser.Scene {
         if (this.dragStartPoint && this.dragEndPoint) {
             const initialVelocity = new Phaser.Math.Vector2(
                 this.dragStartPoint.x - this.dragEndPoint.x,
-                this.dragStartPoint.y - this.dragEndPoint.y 
+                this.dragStartPoint.y - this.dragEndPoint.y
             ).scale(5);
-
+    
             if (this.ball.body instanceof Phaser.Physics.Arcade.Body) {
                 this.ball.body.setVelocity(initialVelocity.x, initialVelocity.y);
-
+    
                 this.ball.setDamping(true);
                 this.ball.setDrag(0.2);
             }
-
+    
             // reset last position array
             if (this.stroke === 0) {
                 this.previousShots = [];
             }
-
+    
             this.stroke++;
             this.scoreText.setText('Strokes: ' + this.stroke);
             // Append the current ball position to the previousShots array
@@ -384,7 +390,7 @@ class GameScene extends Phaser.Scene {
             this.ball.body.setVelocity(0, 0);
             this.ball.body.setAcceleration(0, 0);
         }
-    
+
         this.ball.setPosition(window.innerWidth / 2 - 200, window.innerHeight / 2 - 200); // Example respawn position
     }
 
@@ -403,7 +409,7 @@ class GameScene extends Phaser.Scene {
         if (this.movingBarrier.graphics.x <= 0) {
             this.movingBarrier.right = true;
         }
-        if (this.movingBarrier.graphics.x >= ( (sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
+        if (this.movingBarrier.graphics.x >= ((sizes.width - (sizes.width - sizes.width / 2 - 400) - this.movingBarrier.width)) - (sizes.width - sizes.width / 2 - 400)) {
             this.movingBarrier.right = false;
         }
 
@@ -438,7 +444,7 @@ class GameScene extends Phaser.Scene {
             this.stroke++;
             this.scoreText.setText('Strokes: ' + this.stroke);
         }
-        
+
         // make ball stop smoother
         if (velocityX < 10 && velocityY < 10) {
             this.ball.setVelocity(0, 0);
