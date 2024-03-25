@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import Puttdle from './Puttdle'
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import './App.css'
-import React from 'react';
 import Welcome from './Welcome';
 
 function App() {
