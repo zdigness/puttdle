@@ -1,53 +1,54 @@
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #282c34;
     color: white;
+    flex-grow: 1;
+    gap: 10px;
 }
 
-.welcome {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    height: 100vh;
-    background-color: #282c34;
-    color: white;
-    margin-bottom: 100px;
+h1 {
+    font-size: 2.5em;
+    font-family: "Roboto Slab", serif;
+    font-weight: 600;
+    font-style: bold;
+    margin-bottom: 10px;
 }
 
-.welcome h1 {
-    margin-bottom: 5px;
+h2 {
+    font-size: 1.2em;
+    font-family: "Roboto Slab", serif;
+    font-weight: 200;
+    font-style: normal;
 }
 
-.welcome p {
-    margin-bottom: 5px;
-}
-
-.play {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100vh;
-    background-color: #282c34;
-    color: white;
-    margin-bottom: 100px;
+p {
+    margin-top: 20px;
+    font-size: .8em;
+    font-family: "Roboto Slab", serif;
+    font-weight: 200;
+    font-style: normal;
 }
 
 .playbutton {
-    background-color: #61dafb;
-    color: black;
+    display: flex;
+    background-color: black;
+    color: white;
     border: none;
-    padding: 15px 32px;
+    padding: 13px 32px;
     text-align: center;
+    justify-content: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 50px;
+    font-family: "Varela Round", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-top: 20px;
+    width: 170px;
 }
