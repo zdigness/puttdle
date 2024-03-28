@@ -85,9 +85,8 @@ function App() {
     <div>
       <div id="puttdle">
         <header>
-            <p className="title">Puttdle!</p>
+            <p className="title">PUTTDLE!</p>
             <div id="account">
-
               {loggedIn &&
                 <div id='info'>
                   <p id='score'>Score:</p>
