@@ -160,7 +160,6 @@ class GameScene extends Phaser.Scene {
     private dragStartPoint: Phaser.Math.Vector2 | null = null;
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics | null = null;
-    private hole: Phaser.GameObjects.Graphics | null = null;
     private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
     private holeRadius: number = 20;
     //create array of previous shots
@@ -168,9 +167,10 @@ class GameScene extends Phaser.Scene {
     // score
     private stroke: number = 0;
     private scoreText: Phaser.GameObjects.Text | null = null;
-
+    
     bg!: Phaser.GameObjects.Image;
-
+    
+    private hole: Phaser.GameObjects.Graphics | null = null;
     private sandtrap: Sandtrap | null = null;
     private movingBarrier: MovingBarrier | null = null;
     private pond: Pond | null = null;
@@ -204,8 +204,11 @@ class GameScene extends Phaser.Scene {
 
         // game background
         this.bg = this.add.image(0, 0, 'bg').setOrigin(0.5).setPosition(sizes.width / 2 - 5, sizes.height / 2 + 10);
-        const maskShape = this.make.graphics({ fillStyle: { color: 0x000000 } });
-        maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
+
+        // Create a rounded rectangle mask
+        const maskShape = this.make.graphics();
+        maskShape.fillStyle(0x000000);
+        maskShape.fillRoundedRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650, 20);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
@@ -258,9 +261,11 @@ class GameScene extends Phaser.Scene {
         this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
 
         this.bg.setPosition(Math.round(sizes.width / 2 - 5), Math.round(sizes.height / 2 + 10));
-        const maskShape = this.make.graphics({ fillStyle: { color: 0x000000 } });
-        maskShape.clear(); // Clear any previous mask drawing 
-        maskShape.fillRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
+        
+        // Create a rounded rectangle mask
+        const maskShape = this.make.graphics();
+        maskShape.fillStyle(0x000000);
+        maskShape.fillRoundedRect(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650, 20);
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 

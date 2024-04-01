@@ -89,12 +89,12 @@ function App() {
               <div id="account">
                 {loggedIn &&
                   <div id='info'>
-                    <p id='score'>Score:</p>
-                    <p id='streak'>Streak:</p>
+                    <p id='stats'>Score:</p>
+                    <p id='stats'>Streak:</p>
                   </div>
                 }
                 {Object.keys(user).length != 0 &&
-                  <button onClick={(e) => handleSignOut(e)}>Sign Out</button>
+                  <button className="signOutButton" onClick={(e) => handleSignOut(e)}>Sign Out</button>
                 }
                 <div id="login" data-type="onload"></div>
               </div>
