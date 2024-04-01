@@ -184,6 +184,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('bg', 'assets/bg.png')
         this.load.image('ball', 'assets/ball.png');
         this.load.image('hole', 'assets/hole1.png');
+        this.load.image('clouds', 'assets/clouds.png')
 
         // fonts
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
@@ -241,13 +242,13 @@ class GameScene extends Phaser.Scene {
         this.scale.on('resize', this.resize, this);
 
         // score
-        this.scoreText = this.add.text(sizes.width / 2 - 380, sizes.height / 2 - 310, 'Stroke: ' + this.stroke, { fontSize: '32px', color: '#000000', fontStyle: 'bold', fontFamily: 'bangers', padding: { x: 10, y: 10 }, align: 'center' });
+        this.scoreText = this.add.text(sizes.width / 2 - 380, sizes.height / 2 - 310, 'STROKE: ' + this.stroke, { fontSize: '25px', color: '#000000', fontStyle: 'bold', fontFamily: 'Roboto Slab',padding: { x: 10, y: 10 }, align: 'center'});
     }
 
     win() {
         this.game.events.emit('win', { score: this.stroke });
         this.stroke = 0;
-        this.scoreText?.setText('Stroke: ' + this.stroke);
+        this.scoreText?.setText('STROKE: ' + this.stroke);
     }
 
     resize() {
@@ -373,7 +374,7 @@ class GameScene extends Phaser.Scene {
             }
     
             this.stroke++;
-            this.scoreText?.setText('Stroke: ' + this.stroke);
+            this.scoreText?.setText('STROKE: ' + this.stroke);
             // Append the current ball position to the previousShots array
             this.previousShots.push(new Phaser.Math.Vector2(this.ball?.x, this.ball?.y));
             console.log("Previous shots:", this.previousShots);
@@ -446,7 +447,7 @@ class GameScene extends Phaser.Scene {
                     this.ball.setVelocity(0, 0);
                     this.ball.setAcceleration(0, 0);
                     this.stroke++;
-                    this.scoreText?.setText('Stroke: ' + this.stroke);
+                    this.scoreText?.setText('STROKE: ' + this.stroke);
                 }
             }
         }
@@ -466,7 +467,7 @@ class GameScene extends Phaser.Scene {
             );
             // Check if the ball's center has reached the edge of the hole
             if (distanceToHole <= this.holeRadius) {
-                this.scoreText?.setText('Stroke: ' + this.stroke);
+                this.scoreText?.setText('STROKE: ' + this.stroke);
                 this.win();
                 this.respawnBall(); // Call respawnBall method
             }

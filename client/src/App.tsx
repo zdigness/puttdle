@@ -45,7 +45,7 @@ function App() {
     setLoggedIn(true)
   }
 
-  function hangleSignOut(e: any) {
+  function handleSignOut(e: any) {
     e.preventDefault()
     setUser({})
     const loginElement = document.getElementById('login');
@@ -79,35 +79,35 @@ function App() {
 
   return (
     <>
-    {isWelcome ?(
-      <Welcome isWelcome={isWelcome} onPlayToggle={onPlayToggle} />
-    ) : (
-    <div>
-      <div id="puttdle">
-        <header>
-            <p className="title">PUTTDLE!</p>
-            <div id="account">
-              {loggedIn &&
-                <div id='info'>
-                  <p id='score'>Score:</p>
-                  <p id='streak'>Streak:</p>
-                </div>
-              }
-              {Object.keys(user).length != 0 &&
-                <button onClick={(e) => hangleSignOut(e)}>Sign Out</button>
-              }
-              <div id="login" data-type="onload"></div>
-            </div>
-        </header>
-        <main>
-          <Puttdle />
-        </main>
-        <footer>
-          <p>Created by Good Vibes Inc.</p>
-        </footer>
-      </div>
-    </div>
-    )}
+      {isWelcome ? (
+        <Welcome isWelcome={isWelcome} onPlayToggle={onPlayToggle} />
+      ) : (
+        <div>
+          <div id="puttdle">
+            <header>
+              <p className="title">PUTTDLE!</p>
+              <div id="account">
+                {loggedIn &&
+                  <div id='info'>
+                    <p id='score'>Score:</p>
+                    <p id='streak'>Streak:</p>
+                  </div>
+                }
+                {Object.keys(user).length != 0 &&
+                  <button onClick={(e) => handleSignOut(e)}>Sign Out</button>
+                }
+                <div id="login" data-type="onload"></div>
+              </div>
+            </header>
+            <main>
+              <Puttdle />
+            </main>
+            <footer>
+              <p>Created by Good Vibes Inc.</p>
+            </footer>
+          </div>
+        </div>
+      )}
     </>
   );
 }

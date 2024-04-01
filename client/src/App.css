@@ -11,6 +11,11 @@
   box-sizing: border-box;
 }
 
+.loginButton {
+  background-color: transparent;
+  border: none;
+}
+
 html,
 body {
   height: 100%;
