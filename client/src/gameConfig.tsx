@@ -199,6 +199,8 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        // clouds backdrop
+        this.add.image(0, 0, 'clouds');
         // green boundaries
         this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
 
