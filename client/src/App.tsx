@@ -4,11 +4,33 @@ import Puttdle from './Puttdle'
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import './App.css'
 import Welcome from './Welcome';
+import QuestionModal from './questionModal';
+import StatsModal from './statsModal';
 
 function App() {
   const [isWelcome, setIsWelcome] = useState(true)
   const [user, setUser] = useState({})
   const [loggedIn, setLoggedIn] = useState(false)
+  const [isQuestionOpen, setIsQuestionOpen] = useState(false)
+  const [isStatsOpen, setIsStatsOpen] = useState(false)
+  const [score, setScore] = useState(0)
+  const [streak, setStreak] = useState(0)
+
+  const handleQuestionClick = () => {
+    setIsQuestionOpen(true)
+  }
+
+  const handleCloseQuestion = () => {
+    setIsQuestionOpen(false)
+  }
+
+  const handleStatsClick = () => {
+    setIsStatsOpen(true)
+  }
+
+  const handleCloseStats = () => {
+    setIsStatsOpen(false)
+  }
 
   function handleCallbackResponse(response: any) {
     const decoded = jwtDecode<JwtPayload>(response.credential)
@@ -33,8 +55,8 @@ function App() {
         const score = document.getElementById('score')
         const streak = document.getElementById('streak')
         if (score && streak) {
-          score.textContent = `Score: ${data.scores.total}`
-          streak.textContent = `Streak: ${data.scores.streak}`
+          setScore(data.score)
+          setStreak(data.streak)
         }
         console.log('Success:', data)
       })
@@ -66,10 +88,12 @@ function App() {
     google.accounts.id.renderButton(
       document.getElementById('login'),
       {
+        type: 'icon',
         theme: 'outline',
         size: 'large',
-        text: 'continue_with',
-      }
+        text: 'signin_with',
+        shape: 'pill',
+      } as any
     )
   })
 
@@ -85,12 +109,14 @@ function App() {
         <div>
           <div id="puttdle">
             <header>
-              <p className="title">PUTTDLE!</p>
+              <div className="title">
+                <p>PUTTDLE!</p>
+              </div>
               <div id="account">
+                <img id="question" src="../assets/question.png" alt="question mark" onClick={handleQuestionClick}/>
                 {loggedIn &&
                   <div id='info'>
-                    <p id='stats'>Score:</p>
-                    <p id='stats'>Streak:</p>
+                    <img id="stats" src="../assets/stats.png" alt="stats" onClick={handleStatsClick}/>
                   </div>
                 }
                 {Object.keys(user).length != 0 &&
@@ -106,6 +132,17 @@ function App() {
               <p>Created by Good Vibes Inc.</p>
             </footer>
           </div>
+            { isQuestionOpen &&
+              <div className="question" onClick={() => handleCloseQuestion()}>
+                <QuestionModal></QuestionModal>
+              </div>
+            }
+
+            { isStatsOpen &&
+              <div className="stats" onClick={() => handleCloseStats()}>
+                <StatsModal score={score} streak={streak}></StatsModal>
+              </div>
+            }
         </div>
       )}
     </>
