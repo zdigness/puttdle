@@ -5,6 +5,8 @@
     border-radius: 20px;
 }
 
-.modal-content h1 {
+.modal-content h1,
+.modal-content h2 {
     font-family: "Roboto Slab", serif;
+    margin: 10px 0px 10px 0px;
 }

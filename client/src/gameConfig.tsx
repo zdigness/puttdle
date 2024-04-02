@@ -185,17 +185,6 @@ class GameScene extends Phaser.Scene {
         this.load.image('ball', 'assets/ball.png');
         this.load.image('hole', 'assets/hole1.png');
         this.load.image('clouds', 'assets/clouds.png')
-
-        // fonts
-        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
-        //this.load.css('bangers', 'fonts/bangers.css');
-
-        WebFont.load({
-            custom: {
-                families: ['Bangers'],
-                urls: ['fonts/bangers.css']
-            }
-        });
     }
 
     create() {
