@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
 import config from './gameConfig';
 import WinModal from './WinModal';
-import './Puttdle.css';
 
 const Puttdle: React.FC = () => {
     const gameRef = useRef<Phaser.Game | null>(null);

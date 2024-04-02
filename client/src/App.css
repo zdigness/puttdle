@@ -22,6 +22,7 @@
   border-radius: 5px;
   height: 2em;
 }
+
 .signOutButton:active,
 .signOutButton:hover{
   background-color:grey;
@@ -30,13 +31,12 @@
 html,
 body {
   height: 100%;
+  width: 100%;
 }
 
 body {
   background-color: var(--dkClr);
   color: var(--ltClr);
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -69,11 +69,25 @@ main {
 
 header {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 100px;
   align-self: first baseline;
-  max-width: 100%;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  margin: 0 auto;
+  flex-grow: 1;
+  text-align: center;
+  margin-bottom: 10px;
+  z-index: 1;
+  margin-left: 222px;
+}
+
+.title p {
+  font-size: 2.5em;
+  font-family: "Roboto Slab", serif;
+  font-weight: 600;
+  font-style: bold;
 }
 
 #account {
@@ -82,6 +96,8 @@ header {
   z-index: 1;
   justify-content: center;
   align-items: center;
+  float: right;
+  margin-right: 100px;
 }
 
 #pfp {
@@ -100,22 +116,12 @@ p {
   font-family: bangers;
 }
 
-.title {
-  flex-grow: 1;
-  text-align: center;
-  font-size: 2.5em;
-  font-family: "Roboto Slab", serif;
-  font-weight: 600;
-  font-style: bold;
-  margin-bottom: 10px;
-}
-
 #puttdle {
   display: grid;
   grid-template-rows: repeat(auto-fill, minmax(min-content, 1fr));
   height: 100vh;
   align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
 #info {
@@ -126,4 +132,35 @@ p {
 #stats {
   display: flex;
   margin-right: 10px;
+}
+
+#question, #stats {
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    height: 110%;
+    opacity: 0;
+  }
+  to {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+.question, .stats {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex; /* Center the modal's content */
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  animation-name: fadeIn;
+  animation-duration: 0.3s;
 }
