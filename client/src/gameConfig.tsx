@@ -219,9 +219,8 @@ class GameScene extends Phaser.Scene {
 
         // Set up the hole
         this.holePosition = currentMap.holePosition;
-        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
-        //this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
         this.hole?.clear();
+        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole?.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
         // Set up the sand traps
@@ -311,7 +310,7 @@ class GameScene extends Phaser.Scene {
         this.stroke = 0;
         this.scoreText?.setText('STROKE: ' + this.stroke);
 
-        this.currentMapIndex++;
+        //this.currentMapIndex++;
         this.loadDailyMap();
         console.log("Current map index:", this.currentMapIndex);
     }
@@ -319,6 +318,7 @@ class GameScene extends Phaser.Scene {
     resize() {
         sizes.width = window.innerWidth;
         sizes.height = window.innerHeight;
+        const currentMap = this.dailyMaps[this.currentMapIndex];
 
         this.physics.world.setBounds(sizes.width / 2 - 400, sizes.height / 2 - 325, 800, 650);
 
@@ -331,22 +331,33 @@ class GameScene extends Phaser.Scene {
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
-        this.holePosition = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
-        this.hole?.clear()
+        this.holePosition = currentMap.holePosition;
+        this.hole?.clear();
+        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
         this.hole?.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+
 
         this.scoreText?.setPosition(sizes.width / 2 - 380, sizes.height / 2 - 310);
 
+        // Set up the sand traps
         this.sandtrap?.graphics.clear();
-        this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
+        currentMap.sandtrapPositions.forEach((position) => {
+            this.sandtrap = new Sandtrap(this, position.x, position.y, 50);
+        });
 
+        // Set up the ponds
         this.pond?.graphics.clear();
-        this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
+        currentMap.pondPositions.forEach((position) => {
+            this.pond = new Pond(this, position.x, position.y, 50);
+        });
 
+        // Set up the moving barriers
         this.movingBarrier?.graphics.clear();
         this.movingBarrier?.sprite.destroy();
-        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
-
+        currentMap.movingBarrierPositions.forEach((position) => {
+            this.movingBarrier = new MovingBarrier(this, position.x, position.y, 25, 200);
+        });
+        
         this.ball?.destroy();
         this.ball = this.physics.add.sprite(Math.round(sizes.width / 2 - 200), Math.round(sizes.height / 2 - 200), 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
