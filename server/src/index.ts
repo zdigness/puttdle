@@ -101,8 +101,34 @@ async function getUser(user: User) {
     }
 }
 
+async function getMap() {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM maps WHERE day = CURRENT_DATE');
+        client.release();
+        return result.rows[0];
+    }
+    catch (e) {
+        console.log(e);
+        return null;
+    }
+
+}
+
 app.get('/', (req, res) => {
     res.send('Hello from server!');
+});
+
+app.get('/api/game-config', async (req, res) => {
+    if (await getMap()) {
+        const map = await getMap();
+        console.log(map);
+        res.send(map);
+    }
+    else {
+        console.log('Error: Could not get map');
+        res.send('Error: Could not get map');
+    }
 });
 
 app.post('/api/google-login', async (req, res) => {

@@ -1,5 +1,48 @@
 import Phaser from 'phaser';
 
+const positions = {
+    ball_x: null,
+    ball_y: null,
+    hole_x: null,
+    hole_y: null,
+    sandtrap_x: null,
+    sandtrap_y: null,
+    moving_barrier_x: null,
+    moving_barrier_y: null,
+    pond_x: null,
+    pond_y: null
+};
+
+async function getGameConfig() {
+    try {
+        const response = await fetch('http://localhost:3000/api/game-config', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        });
+
+        const data = await response.json();
+
+        positions.ball_x = data.ball[0];
+        positions.ball_y = data.ball[1];
+        positions.hole_x = data.hole[0];
+        positions.hole_y = data.hole[1];
+        positions.sandtrap_x = data.sandtraps[0];
+        positions.sandtrap_y = data.sandtraps[1];
+        positions.moving_barrier_x = data.barriers[0];
+        positions.moving_barrier_y = data.barriers[1];
+        positions.pond_x = data.watertraps[0];
+        positions.pond_y = data.watertraps[1];
+
+        // Return the positions object or perform any other necessary actions
+        return positions;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+getGameConfig();
+
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -187,6 +230,10 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        // get game config
+        console.log(positions);
+        console.log(positions.ball_x);
+
         // clouds backdrop
         this.add.image(0, 0, 'clouds');
         // green boundaries
@@ -203,20 +250,30 @@ class GameScene extends Phaser.Scene {
         this.bg.setMask(mask);
 
         // sand traps
-        this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
+        const sandtrapX = sizes.width / 2 + (positions.sandtrap_x ?? 0);
+        const sandtrapY = sizes.height / 2 + (positions.sandtrap_y ?? 0);
+        this.sandtrap = new Sandtrap(this, sandtrapX, sandtrapY, 50);
 
         // moving barrier
-        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
+        const movingBarrierX = sizes.width / 2 - (positions.moving_barrier_x ?? 0);
+        const movingBarrierY = sizes.height / 2 + (positions.moving_barrier_y ?? 0);
+        this.movingBarrier = new MovingBarrier(this, movingBarrierX, movingBarrierY, 25, 200);
 
         // pond
-        this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
+        const pondX = sizes.width / 2 - (positions.pond_x ?? 0);
+        const pondY = sizes.height / 2 - (positions.pond_y ?? 0);
+        this.pond = new Pond(this, pondX, pondY, 50);
 
         // hole
         this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
-        this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+        const holeX = sizes.width / 2 + (positions.hole_x ?? 0);
+        const holeY = sizes.height / 2 + (positions.hole_y ?? 0);
+        this.hole.fillCircle(holeX, holeY, this.holeRadius);
 
         // ball
-        this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
+        const ballX = sizes.width / 2 - (positions.ball_x ?? 0);
+        const ballY = sizes.height / 2 - (positions.ball_y ?? 0);
+        this.ball = this.physics.add.sprite(ballX, ballY, 'ball').setOrigin(0.5, 0.5);
         if (this.ball) {
             this.ball.setCollideWorldBounds(true);
             this.ball.setBounce(1);
@@ -273,7 +330,9 @@ class GameScene extends Phaser.Scene {
 
         this.movingBarrier?.graphics.clear();
         this.movingBarrier?.sprite.destroy();
-        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
+        const movingBarrierX = sizes.width / 2 - (positions.moving_barrier_x ?? 0);
+        const movingBarrierY = sizes.height / 2 + (positions.moving_barrier_y ?? 0);
+        this.movingBarrier = new MovingBarrier(this, movingBarrierX, movingBarrierY, 25, 200);
 
         this.ball?.destroy();
         this.ball = this.physics.add.sprite(Math.round(sizes.width / 2 - 200), Math.round(sizes.height / 2 - 200), 'ball').setOrigin(0.5, 0.5);

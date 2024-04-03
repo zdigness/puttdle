@@ -80,7 +80,7 @@ header {
   text-align: center;
   margin-bottom: 10px;
   z-index: 1;
-  margin-left: 222px;
+  padding-left: 222px;
 }
 
 .title p {
