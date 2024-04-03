@@ -1,5 +1,13 @@
 import Phaser from 'phaser';
 
+interface DailyMap {
+    ballPosition: Phaser.Math.Vector2;
+    holePosition: Phaser.Math.Vector2;
+    sandtrapPositions: Phaser.Math.Vector2[];
+    pondPositions: Phaser.Math.Vector2[];
+    movingBarrierPositions: { x: number; y: number; width: number; height: number }[];
+}
+
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -9,6 +17,23 @@ const sizes = {
     greenTop: window.innerHeight,
     greenBottom: window.innerHeight
 };
+
+const dailyMaps: DailyMap[] = [
+    {
+        ballPosition: new Phaser.Math.Vector2(sizes.width / 2 - 300, sizes.height / 2 - 200),
+        holePosition: new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100),
+        sandtrapPositions: [new Phaser.Math.Vector2(sizes.width / 2 + 250, sizes.height / 2 + 150)],
+        pondPositions: [new Phaser.Math.Vector2(sizes.width / 2 - 100, sizes.height / 2 - 100)],
+        movingBarrierPositions: [{ x: sizes.width / 2 - 400, y: sizes.height / 2, width: 25, height: 200 }],
+    },
+    {
+        ballPosition: new Phaser.Math.Vector2(sizes.width / 2 - 100, sizes.height / 2 - 200),
+        holePosition: new Phaser.Math.Vector2(sizes.width / 2 + 200, sizes.height / 2 + 100),
+        sandtrapPositions: [new Phaser.Math.Vector2(sizes.width / 2 + 350, sizes.height / 2 + 150)],
+        pondPositions: [new Phaser.Math.Vector2(sizes.width / 2 - 100, sizes.height / 2 - 100)],
+        movingBarrierPositions: [{ x: sizes.width / 2 - 400, y: sizes.height / 2, width: 25, height: 200 }],
+    },
+];
 
 class Sandtrap {
     private scene: Phaser.Scene;
@@ -155,11 +180,14 @@ class MovingBarrier {
 }
 
 class GameScene extends Phaser.Scene {
+    private currentMapIndex: number = 0;
+    private dailyMaps: DailyMap[] = dailyMaps;
+
     private ball: Phaser.Physics.Arcade.Sprite | null = null;
     private dragStartPoint: Phaser.Math.Vector2 | null = null;
     private dragEndPoint: Phaser.Math.Vector2 | null = null;
     private dragLine: Phaser.GameObjects.Graphics | null = null;
-    private holePosition: Phaser.Math.Vector2 = new Phaser.Math.Vector2(sizes.width / 2 + 100, sizes.height / 2 + 100);
+    private holePosition: Phaser.Math.Vector2 | null = null;
     private holeRadius: number = 20;
     //create array of previous shots
     private previousShots: Phaser.Math.Vector2[] = [];
@@ -176,6 +204,44 @@ class GameScene extends Phaser.Scene {
 
     constructor() {
         super('game');
+    }
+
+    private loadDailyMap() {
+        const currentMap = this.dailyMaps[this.currentMapIndex];
+
+        // Set up the ball
+        this.ball?.destroy();
+        this.ball = this.physics.add.sprite(currentMap.ballPosition.x, currentMap.ballPosition.y, 'ball').setOrigin(0.5, 0.5);
+        if (this.ball) {
+            this.ball.setCollideWorldBounds(true);
+            this.ball.setBounce(1);
+        }
+
+        // Set up the hole
+        this.holePosition = currentMap.holePosition;
+        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
+        //this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+        this.hole?.clear();
+        this.hole?.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+
+        // Set up the sand traps
+        this.sandtrap?.graphics.clear();
+        currentMap.sandtrapPositions.forEach((position) => {
+            this.sandtrap = new Sandtrap(this, position.x, position.y, 50);
+        });
+
+        // Set up the ponds
+        this.pond?.graphics.clear();
+        currentMap.pondPositions.forEach((position) => {
+            this.pond = new Pond(this, position.x, position.y, 50);
+        });
+
+        // Set up the moving barriers
+        this.movingBarrier?.graphics.clear();
+        this.movingBarrier?.sprite.destroy();
+        currentMap.movingBarrierPositions.forEach((position) => {
+            this.movingBarrier = new MovingBarrier(this, position.x, position.y, 25, 200);
+        });
     }
 
     preload() {
@@ -202,29 +268,31 @@ class GameScene extends Phaser.Scene {
         const mask = maskShape.createGeometryMask();
         this.bg.setMask(mask);
 
+        this.loadDailyMap();
+
         // sand traps
-        this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
+        //this.sandtrap = new Sandtrap(this, sizes.width / 2 + 250, sizes.height / 2 + 150, 50);
 
         // moving barrier
-        this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
+        //this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200);
 
         // pond
-        this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
+        //this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50);
 
         // hole
-        this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
-        this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
+        //this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } });
+        //this.hole.fillCircle(this.holePosition.x, this.holePosition.y, this.holeRadius);
 
         // ball
-        this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
-        if (this.ball) {
-            this.ball.setCollideWorldBounds(true);
-            this.ball.setBounce(1);
-        }
+        // this.ball = this.physics.add.sprite(sizes.width / 2 - 200, sizes.height / 2 - 200, 'ball').setOrigin(0.5, 0.5);
+        // if (this.ball) {
+        //     this.ball.setCollideWorldBounds(true);
+        //     this.ball.setBounce(1);
+        // }
 
         // collision
-        this.movingBarrier.setCollision(this.ball);
-        this.physics.add.collider(this.ball, this.movingBarrier.sprite);
+        // this.movingBarrier.setCollision(this.ball);
+        // this.physics.add.collider(this.ball, this.movingBarrier.sprite);
 
         // putting
         this.input.on('pointerdown', this.startDrag, this);
@@ -242,6 +310,10 @@ class GameScene extends Phaser.Scene {
         this.game.events.emit('win', { score: this.stroke });
         this.stroke = 0;
         this.scoreText?.setText('STROKE: ' + this.stroke);
+
+        this.currentMapIndex++;
+        this.loadDailyMap();
+        console.log("Current map index:", this.currentMapIndex);
     }
 
     resize() {
@@ -455,10 +527,11 @@ class GameScene extends Phaser.Scene {
         // MADE SHOT
         // Find distance between ball center and hole edge
         if (this.ball) {
+            const currentMap = this.dailyMaps[this.currentMapIndex];
             // Find distance between ball center and hole edge
             const distanceToHole = Phaser.Math.Distance.Between(
                 this.ball.x, this.ball.y,
-                this.holePosition.x, this.holePosition.y
+                currentMap.holePosition.x, currentMap.holePosition.y
             );
             // Check if the ball's center has reached the edge of the hole
             if (distanceToHole <= this.holeRadius) {
