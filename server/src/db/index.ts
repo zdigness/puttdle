@@ -1,136 +1,67 @@
-import express, { Application } from 'express';
-import db from './models';
-import { get } from 'http';
+import { Sequelize } from "sequelize-typescript"
+import logger from "./util/logger"
+import configJson from "./config/config"
 
-const app: Application = express();
-const PORT = 3000;
+const env = process.env.NODE_ENV || "development"
+const config = configJson[env as keyof typeof configJson]
+import { User } from "../models/user.model"
+import { Score } from "../models/score.model"
 
-app.use(express.json());
+/**
+ * Database class
+ * @class
+ * @classdesc Database class to connect to the database.
+ * @constructor
+ * @public
+ * @property {Sequelize} sequelize - The sequelize instance
+ * @method connectToDatabase - Connects to the database
+ * TODO: Add env vars
+ */
 
-const cors = require('cors');
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-    optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-db.sequelize.sync().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-})
+class Database {
+  public sequelize = new Sequelize(config.database, config.username, config.password, {
+    repositoryMode: true,
+    host: config.host,
+    dialect: config.dialect,
+    port: 5432,
+    pool: {
+      max: 15,
+      min: 1,
+      acquire: 30000,
+      idle: 10000,
+    },
+    logging: (msg) => logger.debug(msg),
+    models: [User, Score],
+  })
 
-const { Pool } = require('pg');
+  public User = this.sequelize.getRepository(User)
+  public Score = this.sequelize.getRepository(Score)
 
-const pool = new Pool ({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'puttdle',
-    password: 'postgrepassword',
-    port: 5432
-})
+  constructor() {
+    this.connectToDatabase()
+  }
 
+  private async connectToDatabase() {
+    await this.sequelize
+      .authenticate()
+      .then(() => {
+        console.log("Connection has been established successfully.")
+      })
+      .catch((err) => {
+        console.error("Unable to connect to the Database:", err)
+      })
 
-
-interface User {
-    email: string;
+    await this.sequelize
+      .sync()
+      .then(() => {
+        console.log("All models were synchronized successfully.")
+      })
+      .catch((err) => {
+        console.error("Unable to sync models", err)
+      })
+  }
 }
 
-interface Score {
-    user_id: number;
-    streak: number;
-    total: number;
-}
+const db = new Database()
 
-interface FullUser {
-    user: User;
-    scores: Score;
-}
-
-async function checkUser(user: User) {
-    try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT EXISTS (SELECT 1 FROM users WHERE email = $1)', [user]);
-        client.release();
-        return result.rows[0]['exists'];
-    }
-    catch (e) {
-        console.log(e);
-        return null;
-    }
-}
-
-async function createUser(user: User) {
-    try {
-        const streak = 0;
-        const total = 0;
-
-        const client = await pool.connect();
-        console.log("Creating user")
-        await client.query('INSERT INTO users (email) VALUES ($1)', [user]);
-        console.log("Selecting user")
-        const newUser = await client.query('SELECT * FROM users WHERE email = $1', [user]);
-        console.log("Selecting user_id")
-        console.log(newUser.rows[0].id);
-        console.log("Inserting scores")
-        console.log(newUser.rows[0].id, streak, total);
-        await client.query('INSERT INTO scores (user_id, streak, total) VALUES ($1, $2, $3)', [newUser.rows[0].id, streak, total]);
-        console.log("Selecting scores")
-        const scores = await client.query('SELECT * FROM scores WHERE user_id = $1', [newUser.rows[0].id]);
-        client.release();
-
-        const full: FullUser = {
-            user: newUser.rows[0],
-            scores: scores.rows[0]
-        }
-        return full;
-    }
-    catch (e) {
-        console.log(e);
-        return null;
-    }
-}
-
-async function getUser(user: User) {
-    try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT * FROM users WHERE email = $1', [user]);
-        const scores = await client.query('SELECT * FROM scores WHERE user_id = $1', [result.rows[0].id]);
-        client.release();
-        const full: FullUser = {
-            user: result.rows[0],
-            scores: scores.rows[0]
-        }
-        return full;
-    }
-    catch (e) {
-        console.log(e);
-        return null;
-    }
-}
-
-app.get('/', (req, res) => {
-    res.send('Hello from server!');
-});
-
-app.post('/api/google-login', async (req, res) => {
-    const user: User = req.body.email;
-    if (await checkUser(user)) {
-        console.log('User exists');
-        const fullUser = await getUser(user);
-        console.log(fullUser?.user.email)
-        console.log(fullUser?.scores.streak);
-        console.log(fullUser?.scores.total);
-        res.send(fullUser);
-    }
-    else {
-        console.log('Creating user');
-        const newUser = await createUser(user);
-        console.log(newUser?.user.email);
-        console.log(newUser?.scores.streak);
-        console.log(newUser?.scores.total);
-        res.send(newUser);    
-    }
-});
-
-
+export default db
