@@ -4,8 +4,8 @@ import configJson from "./config/config"
 
 const env = process.env.NODE_ENV || "development"
 const config = configJson[env as keyof typeof configJson]
-import { User } from "../models/user.model"
-import { Score } from "../models/score.model"
+import { User } from "../models/user"
+import { Score } from "../models/score"
 
 /**
  * Database class
@@ -62,6 +62,6 @@ class Database {
   }
 }
 
-const db = new Database()
+const index = new Database()
 
-export default db
+export default index

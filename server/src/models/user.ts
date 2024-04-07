@@ -1,5 +1,5 @@
 import { Table, Model, Column, DataType, Index, HasOne } from "sequelize-typescript"
-import { Score } from "./score.model"
+import { Score } from "./score"
 
 @Table({
   tableName: "Users",

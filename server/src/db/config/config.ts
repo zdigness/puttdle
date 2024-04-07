@@ -1,4 +1,5 @@
 import { Dialect } from "sequelize"
+
 interface Config {
   username: string
   password: string
@@ -14,27 +15,17 @@ interface DatabaseConfig {
   production: Config
 }
 
+const configTemplate: Config = {
+  username: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "password",
+  database: process.env.DB_NAME || "database",
+  host: process.env.DB_HOST || "localhost",
+  dialect: "postgres",
+}
+
 const config: DatabaseConfig = {
-  development: {
-    username: "postgres",
-    password: "postgrepassword",
-    database: "puttdle_dev",
-    host: "db",
-    dialect: "postgres",
-  },
-  test: {
-    username: "postgres",
-    password: "postgrepassword",
-    database: "puttdle_test",
-    host: "db",
-    dialect: "postgres",
-  },
-  production: {
-    username: "root",
-    password: "null",
-    database: "puttdle_prod",
-    host: "db",
-    dialect: "postgres",
-  },
+  development: configTemplate,
+  test: configTemplate,
+  production: configTemplate,
 }
 export default config
