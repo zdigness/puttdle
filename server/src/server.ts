@@ -1,7 +1,11 @@
+import dotenv from "dotenv"
+import fs from "fs"
+dotenv.config(dotenv.parse(fs.readFileSync(".env")))
+
 import express, { Application } from "express"
 import cors from "cors"
-import "./db/index"
 import appRouter from "./routes/index"
+import "./db"
 
 const app: Application = express()
 const port = 3000

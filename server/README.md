@@ -3,7 +3,22 @@
 Running on Typescript with Express and the Sequelize-Typescript ORM, the server connects to a Postgres DB. 
 The server exposes a RESTful API for the client to interact with on port 3000.
 
+
 # Getting started locally with Docker
+
+## Docker DB setup
+1. To run the server, you will need to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
+2. Go to `server/`
+3. Comment out the `server` service in the `docker-compose.yml` file
+![img_1.png](images/dockerDbLocalServerDockerCompose.png)
+4. Run `docker-compose up` in the directory (if you want a detached terminal, run `docker-compose up -d` instead)
+5. Make sure to setup your `.env` file to match the docker-compose.yml file 
+6. Run `npm run dev` in the root directory
+7. You can now access the server at `http://localhost:3000` via Postman or any other API client.
+
+![img.png](images/dockerDbLocalServer.png)
+
+## Full dockerized setup
 
 1. To run the server, you will need to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
 2. Go to `server/` 
