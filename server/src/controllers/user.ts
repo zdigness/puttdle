@@ -1,6 +1,6 @@
-import { User } from "../models/user.model"
-import { Score } from "../models/score.model"
-import db from "../db/index"
+import { User } from "../models/user"
+import { Score } from "../models/score"
+import db from "../db"
 
 interface FullUser {
   user: User
@@ -13,7 +13,7 @@ export default class UserController {
       const { email } = user
       return await db.User.findOne({ where: { email } })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return null
     }
   }
@@ -34,7 +34,7 @@ export default class UserController {
         scores: userScore[0],
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return null
     }
   }
@@ -59,7 +59,7 @@ export default class UserController {
         scores: scores,
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return null
     }
   }
