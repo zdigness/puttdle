@@ -1,6 +1,5 @@
 import dotenv from "dotenv"
-import fs from "fs"
-dotenv.config(dotenv.parse(fs.readFileSync(".env")))
+dotenv.config()
 
 import express, { Application } from "express"
 import cors from "cors"

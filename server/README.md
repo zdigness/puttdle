@@ -9,11 +9,11 @@ The server exposes a RESTful API for the client to interact with on port 3000.
 ## Docker DB setup
 1. To run the server, you will need to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
 2. Go to `server/`
-3. Comment out the `server` service in the `docker-compose.yml` file
+3. `cp .env.example .env` and add your vars, the `DB_HOST` will be `localhost` 
+4. Comment out the `server` service in the `docker-compose.yml` file
 ![img_1.png](images/dockerDbLocalServerDockerCompose.png)
-4. Run `docker-compose up` in the directory (if you want a detached terminal, run `docker-compose up -d` instead)
-5. Make sure to setup your `.env` file to match the docker-compose.yml file 
-6. Run `npm run dev` in the root directory
+5. Run `docker-compose up` in the directory (if you want a detached terminal, run `docker-compose up -d` instead)
+6. Run `npm run dev` in the root directory 
 7. You can now access the server at `http://localhost:3000` via Postman or any other API client.
 
 ![img.png](images/dockerDbLocalServer.png)
@@ -21,9 +21,10 @@ The server exposes a RESTful API for the client to interact with on port 3000.
 ## Full dockerized setup
 
 1. To run the server, you will need to have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
-2. Go to `server/` 
-3. Run `docker-compose up` in the directory (if you want a detached terminal, run `docker-compose up -d` instead)
-4. You can now access the server at `http://localhost:3000` via Postman or any other API client.
+2. Go to `server/`
+3. `cp .env.example .env` and add your vars, the `DB_HOST` will be the service name in the `docker-compose.yml` file (`db`)
+4. Run `docker-compose up` in the directory (if you want a detached terminal, run `docker-compose up -d` instead)
+5. You can now access the server at `http://localhost:3000` via Postman or any other API client.
 
 ## Connecting to the Postgres DB in pgAdmin
 1. Spin up your docker containers

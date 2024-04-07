@@ -23,7 +23,7 @@ class Database {
     repositoryMode: true,
     host: config.host,
     dialect: config.dialect,
-    port: 5438,
+    port: 5432,
     pool: {
       max: 15,
       min: 1,
