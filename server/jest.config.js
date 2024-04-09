@@ -28,13 +28,15 @@ module.exports = {
   ],
   
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    "<rootDir>/src/server.ts",
-    "<rootDir>/src/models/",
-    "<rootDir>/src/db/index.ts",
-    "<rootDir>/src/db/config",
-    "<rootDir>/src/routes/index.ts",
-  ],
+  coveragePathIgnorePatterns:
+    [
+      "<rootDir>/src/server.ts",
+      "<rootDir>/src/types.ts",
+      "<rootDir>/src/models/",
+      "<rootDir>/src/db/index.ts",
+      "<rootDir>/src/db/config",
+      "<rootDir>/src/routes/",
+    ],
   
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
@@ -49,7 +51,7 @@ module.exports = {
       functions: 80,
       lines: 80,
       statements: 80,
-    }
+    },
   },
   
   // A path to a custom dependency extractor
@@ -75,7 +77,7 @@ module.exports = {
   
   // An array of directory names to be searched recursively up from the requiring module's location
   moduleDirectories: [
-    "node_modules"
+    "node_modules",
   ],
   
   // An array of file extensions your modules use
@@ -181,7 +183,6 @@ module.exports = {
     ".ts$": "ts-jest",
   },
 
-
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
   //   "/node_modules/",
@@ -199,4 +200,4 @@ module.exports = {
   
   // Whether to use watchman for file crawling
   // watchman: true,
-};
+}

@@ -31,7 +31,7 @@ describe("UserController", () => {
 
     ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
 
-    const user: User | null = await UserController.checkUser(mockUser as User)
+    const user: User | null = await UserController.checkUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
     expect(user).toEqual(mockUser)
@@ -43,7 +43,7 @@ describe("UserController", () => {
     // Mock the findOne method to return null
     ;(database.User.findOne as jest.Mock).mockResolvedValue(null)
 
-    const user: User | null = await UserController.checkUser(mockUser as User)
+    const user: User | null = await UserController.checkUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
     expect(user).toBeNull()
@@ -57,7 +57,7 @@ describe("UserController", () => {
       throw new Error("Test error")
     })
 
-    const result = await UserController.checkUser(mockUser as User)
+    const result = await UserController.checkUser(mockUser.email)
     expect(result).toBeNull()
     expect(consoleSpy).toHaveBeenCalled()
   })
@@ -111,7 +111,7 @@ describe("UserController", () => {
     ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
     ;(database.Score.findOne as jest.Mock).mockResolvedValue(mockScore)
 
-    const fullUser = await UserController.getUser(mockUser as User)
+    const fullUser = await UserController.getUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
     expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id } })
@@ -124,7 +124,7 @@ describe("UserController", () => {
     // Mock the findOne method to return null
     ;(database.User.findOne as jest.Mock).mockResolvedValue(null)
 
-    const fullUser = await UserController.getUser(mockUser as User)
+    const fullUser = await UserController.getUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
     expect(fullUser).toBeNull()
@@ -138,7 +138,7 @@ describe("UserController", () => {
     // Mock the findOne method to return null for the score
     ;(database.Score.findOne as jest.Mock).mockResolvedValue(null)
 
-    const fullUser = await UserController.getUser(mockUser as User)
+    const fullUser = await UserController.getUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
     expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id } })
@@ -153,7 +153,7 @@ describe("UserController", () => {
       throw new Error("Test error")
     })
 
-    const result = await UserController.getUser(mockUser as User)
+    const result = await UserController.getUser(mockUser.email)
 
     expect(result).toBeNull()
     expect(consoleSpy).toHaveBeenCalled()

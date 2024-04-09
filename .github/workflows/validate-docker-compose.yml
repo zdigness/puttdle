@@ -1,0 +1,30 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Docker Compose Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker
+        uses: hoverkraft-tech/compose-action@v1.5.1
+        with:
+          compose-file: "server/docker-compose.yml"
+          services: |
+            Server
+        env:
+          NODE_ENV: "development"
+          DB_HOST: "db"
+          DB_USER: "postgres"
+          DB_PASS: "postgrepassword"
+          DB_NAME: "puttdle_dev"
