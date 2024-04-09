@@ -14,7 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Move into server directory
+        run: |
+          cd server/
 
       - name: Build the Docker image
-        run: docker build . --file server/Dockerfile --tag server:$(date +%s)
+        run: docker build . --tag server:$(date +%s)

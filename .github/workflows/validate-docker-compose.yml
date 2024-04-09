@@ -16,6 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Move into server directory
+        run: |
+          cd server/
+
       - name: Setup Docker
         uses: hoverkraft-tech/compose-action@v1.5.1
         with:
