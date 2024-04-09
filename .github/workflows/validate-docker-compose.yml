@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,7 +18,7 @@ jobs:
       - name: Setup Docker
         uses: hoverkraft-tech/compose-action@v1.5.1
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "../server/docker-compose.yml"
         env:
           NODE_ENV: "development"
           DB_HOST: "db"
