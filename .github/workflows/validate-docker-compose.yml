@@ -21,9 +21,7 @@ jobs:
       - name: Setup Docker
         uses: hoverkraft-tech/compose-action@v1.5.1
         with:
-          compose-file: "server/docker-compose.yml"
-          services: |
-            Server
+          compose-file: "./docker-compose.yml"
         env:
           NODE_ENV: "development"
           DB_HOST: "db"
