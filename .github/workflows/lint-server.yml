@@ -10,8 +10,10 @@ on:
 
 jobs:
   lint:
-    name: Lint Action
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
     steps:
       - name: Use Node.js 20.0
         uses: actions/setup-node@v4
@@ -21,10 +23,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Move into server directory
-        run: |
-          cd server/
 
       - name: Install dependencies
         run: npm install

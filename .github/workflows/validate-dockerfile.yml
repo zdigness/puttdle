@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Dockerfile Build CI
 
 on:
   push:
@@ -10,15 +10,13 @@ on:
 
 jobs:
   build:
-    name: Dockerfile Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Move into server directory
-        run: |
-          cd server/
-
       - name: Build the Docker image
-        run: docker build . --tag server:$(date +%s)
+        run: docker build . . --tag server:$(date +%s)
