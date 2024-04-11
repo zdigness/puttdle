@@ -11,17 +11,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    env:
+      NODE_ENV: "development"
+      DB_HOST: "db"
+      DB_USER: "postgres"
+      DB_PASS: "postgrepassword"
+      DB_NAME: "puttdle_dev"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Docker
-        uses: hoverkraft-tech/compose-action@v1.5.1
-        with:
-          compose-file: "../server/docker-compose.yml"
-        env:
-          NODE_ENV: "development"
-          DB_HOST: "db"
-          DB_USER: "postgres"
-          DB_PASS: "postgrepassword"
-          DB_NAME: "puttdle_dev"
+      - name: Docker compose up
+        run: docker-compose up
