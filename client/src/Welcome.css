@@ -51,3 +51,22 @@
     margin-top: 20px;
     width: 170px;
 }
+
+@media (max-width: 350px) {
+    .container h1 {
+        font-size: 2em;
+    }
+
+    .container h2 {
+        font-size: 1em;
+    }
+
+    .container p {
+        font-size: .7em;
+    }
+
+    .playbutton {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
