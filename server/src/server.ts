@@ -1,7 +1,10 @@
+import dotenv from "dotenv"
+dotenv.config()
+
 import express, { Application } from "express"
 import cors from "cors"
-import "./db/index"
 import appRouter from "./routes/index"
+import "./db"
 
 const app: Application = express()
 const port = 3000
