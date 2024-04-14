@@ -6,6 +6,10 @@ const env = process.env.NODE_ENV || "development"
 const config = configJson[env as keyof typeof configJson]
 import { User } from "../models/user"
 import { Score } from "../models/score"
+import { Map } from "../models/map"
+import { Sandtrap } from "../models/sandtrap"
+import { Water } from "../models/water"
+import { Barrier } from "../models/barrier"
 
 /**
  * Database class
@@ -36,6 +40,10 @@ class Database {
 
   public User = this.sequelize.getRepository(User)
   public Score = this.sequelize.getRepository(Score)
+  public Map = this.sequelize.getRepository(Map)
+  public Sandtrap = this.sequelize.getRepository(Sandtrap)
+  public Water = this.sequelize.getRepository(Water)
+  public Barrier = this.sequelize.getRepository(Barrier)
 
   constructor() {
     this.connectToDatabase()
