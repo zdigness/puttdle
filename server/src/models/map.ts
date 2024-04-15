@@ -11,28 +11,28 @@ export class Map extends Model<Map> {
   @Column(DataType.INTEGER)
     id!: number
     
-  @Column(DataType.DATEONLY)
   @AllowNull(false)
+  @Column(DataType.DATEONLY)
     day!: Date
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
     par!: number
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
     hole_x!: number
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
     hole_y!: number
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
     ball_x!: number
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
     ball_y!: number
 
   @HasMany(() => Sandtrap)

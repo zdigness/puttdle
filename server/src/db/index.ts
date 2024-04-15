@@ -35,7 +35,7 @@ class Database {
       idle: 10000,
     },
     logging: (msg) => logger.debug(msg),
-    models: [User, Score],
+    models: [User, Score, Map, Sandtrap, Water, Barrier],
   })
 
   public User = this.sequelize.getRepository(User)
