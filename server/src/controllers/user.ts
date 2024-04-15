@@ -1,16 +1,11 @@
 import { User } from "../models/user"
 import { Score } from "../models/score"
+import { FullUser } from "../types"
 import db from "../db"
 
-interface FullUser {
-  user: User
-  scores: Score
-}
-
 export default class UserController {
-  static async checkUser(user: User): Promise<User | null> {
+  static async checkUser(email: User["email"]): Promise<User | null> {
     try {
-      const { email } = user
       return await db.User.findOne({ where: { email } })
     } catch (e) {
       console.error(e)
@@ -21,16 +16,16 @@ export default class UserController {
   static async createUser(email: User["email"]): Promise<FullUser | null> {
     try {
       // Check if user exists, otherwise create them
-      const user: [User, boolean] = await db.User.findOrCreate({ where: { email: email } })
+      const createdUser: [User, boolean] = await db.User.findOrCreate({ where: { email } })
 
-      if (!user[1]) {
-        return null
+      if (!createdUser[1]) {
+        throw Error("User already exists")
       }
 
-      const userScore: [Score, boolean] = await db.Score.findOrCreate({ where: { userId: user[0].id } })
+      const userScore: [Score, boolean] = await db.Score.findOrCreate({ where: { userId: createdUser[0].id } })
 
       return {
-        user: user[0],
+        user: createdUser[0],
         scores: userScore[0],
       }
     } catch (e) {
@@ -39,23 +34,22 @@ export default class UserController {
     }
   }
 
-  static async getUser(user: User): Promise<Promise<FullUser> | null> {
+  static async getUser(email: User["email"]): Promise<Promise<FullUser> | null> {
     try {
-      const { email } = user
-      const result: User | null = await db.User.findOne({ where: { email: email } })
+      const retrievedUser: User | null = await db.User.findOne({ where: { email } })
 
-      if (!result) {
-        return null
+      if (!retrievedUser) {
+        throw Error("User does not exist")
       }
 
-      const scores: Score | null = await db.Score.findOne({ where: { userId: result.id } })
+      const scores: Score | null = await db.Score.findOne({ where: { userId: retrievedUser.id } })
 
       if (!scores) {
-        return null
+        throw Error(`Score does not exist for user ${retrievedUser.id}`)
       }
 
       return {
-        user: result,
+        user: retrievedUser,
         scores: scores,
       }
     } catch (e) {
