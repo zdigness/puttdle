@@ -4,43 +4,43 @@ import { Sandtrap } from "./sandtrap"
 import { Water } from "./water"
 import { Barrier } from "./barrier"
 
-@Table({ tableName: "Maps", })
+@Table({ tableName: "Maps" })
 export class Map extends Model<Map> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-    id!: number
-    
+  id!: number
+
   @AllowNull(false)
   @Column(DataType.DATEONLY)
-    day!: Date
+  day!: Date
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-    par!: number
+  par!: number
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-    hole_x!: number
+  hole_x!: number
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-    hole_y!: number
+  hole_y!: number
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-    ball_x!: number
+  ball_x!: number
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-    ball_y!: number
+  ball_y!: number
 
   @HasMany(() => Sandtrap)
-    sandtraps!: Sandtrap[]
+  sandtraps!: Sandtrap[]
 
   @HasMany(() => Water)
-    waters!: Water[]
+  waters!: Water[]
 
   @HasMany(() => Barrier)
-    barriers!: Barrier[]
+  barriers!: Barrier[]
 }
