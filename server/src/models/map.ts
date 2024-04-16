@@ -1,4 +1,14 @@
-import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, AllowNull, HasMany } from "sequelize-typescript"
+import {
+  Table,
+  Model,
+  Column,
+  DataType,
+  PrimaryKey,
+  AutoIncrement,
+  AllowNull,
+  HasMany,
+  Index,
+} from "sequelize-typescript"
 
 import { Sandtrap } from "./sandtrap"
 import { Water } from "./water"
@@ -12,6 +22,7 @@ export class Map extends Model<Map> {
   id!: number
 
   @AllowNull(false)
+  @Index("day-index")
   @Column(DataType.DATEONLY)
   day!: Date
 
