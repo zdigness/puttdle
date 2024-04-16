@@ -11,8 +11,8 @@ export class Barrier extends Model<Barrier> {
   mapId!: number
 
   @Column(DataType.INTEGER)
-  x!: number
+  barrier_x!: number
 
   @Column(DataType.INTEGER)
-  y!: number
+  barrier_y!: number
 }

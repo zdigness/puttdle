@@ -11,8 +11,8 @@ export class Sandtrap extends Model<Sandtrap> {
   mapId!: number
 
   @Column(DataType.INTEGER)
-  x!: number
+  sandtrap_x!: number
 
   @Column(DataType.INTEGER)
-  y!: number
+  sandtrap_y!: number
 }

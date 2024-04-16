@@ -11,17 +11,9 @@ mapRouter.get("/", async (req, res) => {
     const mapExists: FullMap | null = await MapController.getMap(today)
 
     if (mapExists) {
-      const fullMap: FullMap | null = await MapController.getMap(today)
-      console.log(fullMap?.map.day)
-      console.log(fullMap?.map.par)
-      console.log(fullMap?.map.hole_x)
-      console.log(fullMap?.map.hole_y)
-      console.log(fullMap?.map.ball_x)
-      console.log(fullMap?.map.ball_y)
-      console.log(fullMap?.sandtraps)
-      console.log(fullMap?.water)
-      console.log(fullMap?.barriers)
-      res.status(200).send(fullMap)
+      res.status(200).send(mapExists)
+    } else {
+      res.status(404).send("Map not found")
     }
   } catch (e) {
     console.error(e)

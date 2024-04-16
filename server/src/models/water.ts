@@ -11,8 +11,8 @@ export class Water extends Model<Water> {
   mapId!: number
 
   @Column(DataType.INTEGER)
-  x!: number
+  water_x!: number
 
   @Column(DataType.INTEGER)
-  y!: number
+  water_y!: number
 }
