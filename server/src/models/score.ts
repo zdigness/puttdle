@@ -7,21 +7,21 @@ import { User } from "./user"
 export class Score extends Model<Score> {
   @ForeignKey(() => User)
   @Column
-    userId!: number
+  userId!: number
 
   @BelongsTo(() => User)
-    user!: User
+  user!: User
 
   @Column({
     type: DataType.INTEGER,
     defaultValue: 0,
   })
-    streak?: number
+  streak?: number
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
     defaultValue: 0,
   })
-    total?: number
+  total?: number
 }
