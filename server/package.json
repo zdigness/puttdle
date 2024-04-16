@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon -x ts-node src/server.ts",
     "lint": "eslint --ext .ts ./src",
-    "lint:fix": "yarn prettier && yarn lint --fix",
+    "lint:fix": "npm run prettier && npm run lint --fix",
     "prettier": "prettier --ignore-path .gitignore --write src",
     "test": "jest"
   },
