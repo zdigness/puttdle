@@ -24,8 +24,8 @@
 }
 
 .signOutButton:active,
-.signOutButton:hover{
-  background-color:grey;
+.signOutButton:hover {
+  background-color: grey;
 }
 
 html,
@@ -134,7 +134,8 @@ p {
   margin-right: 10px;
 }
 
-#question, #stats {
+#question,
+#stats {
   cursor: pointer;
 }
 
@@ -149,7 +150,8 @@ p {
   }
 }
 
-.question, .stats {
+.question,
+.stats {
   position: fixed;
   top: 0;
   left: 0;
