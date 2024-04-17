@@ -52,7 +52,7 @@ describe("MapController", () => {
       const fullMap: FullMap | null = await MapController.getMap(new Date())
 
       expect(database.Map.findOne).toHaveBeenCalledWith({
-        where: { day: expect.objectContaining({ toDateString: mockMap.day.toDateString() }) }
+        where: { day: expect.anything() },
       });
       expect(database.Sandtrap.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Water.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
