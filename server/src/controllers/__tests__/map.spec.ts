@@ -53,7 +53,7 @@ describe("MapController", () => {
 
       expect(database.Map.findOne).toHaveBeenCalledWith({
         where: { day: expect.anything() },
-      });
+      })
       expect(database.Sandtrap.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Water.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Barrier.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
