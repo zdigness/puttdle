@@ -55,7 +55,7 @@ describe("MapController", () => {
       const parsedDate = new Date(date)
       const fullMap: FullMap | null = await MapController.getMap(parsedDate)
 
-      expect(database.Map.findOne).toHaveBeenCalledWith({ where: { day: date } })
+      expect(database.Map.findOne).toHaveBeenCalledWith({ where: { day: parsedDate } })
       expect(database.Sandtrap.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Water.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Barrier.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
