@@ -6,9 +6,9 @@ import { Score } from "./score"
 })
 export class User extends Model<User> {
   @HasOne(() => Score, { foreignKey: "userId" })
-    score!: Score
+  score!: Score
 
   @Index("email-index")
   @Column(DataType.STRING)
-    email!: string
+  email!: string
 }
