@@ -49,11 +49,13 @@ describe("MapController", () => {
       ;(database.Water.findAll as jest.Mock).mockResolvedValue(mockWater)
       ;(database.Barrier.findAll as jest.Mock).mockResolvedValue(mockBarriers)
 
-      const fullMap: FullMap | null = await MapController.getMap(new Date())
+      const today = new Date()
+      // Create a new Date object with only the year, month, and day components
+      const date = today.toISOString().split('T')[0]
+      const parsedDate = new Date(date);
+      const fullMap: FullMap | null = await MapController.getMap(parsedDate)
 
-      expect(database.Map.findOne).toHaveBeenCalledWith({
-        where: { day: expect.anything() },
-      })
+      expect(database.Map.findOne).toHaveBeenCalledWith({ where: { day: date } })
       expect(database.Sandtrap.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Water.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
       expect(database.Barrier.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })

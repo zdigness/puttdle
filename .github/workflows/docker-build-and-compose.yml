@@ -1,0 +1,49 @@
+name: Docker Build and Compose
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - 'docker-compose.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - 'docker-compose.yml'
+
+jobs:
+  build-and-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build client Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./client
+        file: ./client/Dockerfile
+        push: false
+        tags: client:latest
+
+    - name: Build server Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: ./server
+        file: ./server/Dockerfile
+        push: false
+        tags: server:latest
+
+    - name: Run docker-compose
+      run: |
+        docker-compose up -d
+        docker-compose ps

@@ -14,6 +14,3 @@ COPY . .
 
 # Make port 8000 available to the world outside this container
 EXPOSE 4200
-
-# Define the command to run the client application using the "dev" script
-CMD ["npm", "run", "dev"]
