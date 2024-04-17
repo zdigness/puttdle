@@ -28,3 +28,10 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Running with Docker Compose
+
+1. Make sure you have Docker installed on your machine.
+2. Navigate to the root directory of the project.
+3. Run `docker-compose up` to start the frontend services.
+4. Access the client application at `http://localhost:4200`.
