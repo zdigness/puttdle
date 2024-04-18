@@ -33,5 +33,5 @@ export default {
 
 1. Make sure you have Docker installed on your machine.
 2. Navigate to the root directory of the project.
-3. Run `docker-compose up` to start the frontend services.
+3. Run `docker-compose up` to start the frontend and backend services.
 4. Access the client application at `http://localhost:4200`.

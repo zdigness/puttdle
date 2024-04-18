@@ -12,5 +12,5 @@ RUN npm install
 # Bundle app source inside Docker image
 COPY . .
 
-# Make port 8000 available to the world outside this container
+# Make port 4200 available to the world outside this container
 EXPOSE 4200

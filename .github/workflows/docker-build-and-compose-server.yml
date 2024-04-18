@@ -1,0 +1,26 @@
+name: Docker Build and Compose Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build server Docker image
+      run: |
+        docker build -t server:latest -f ./server/Dockerfile ./server
+
+    - name: Run docker-compose
+      run: |
+        docker-compose up -d
+        docker-compose ps
