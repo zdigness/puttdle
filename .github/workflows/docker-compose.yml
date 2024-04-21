@@ -1,4 +1,4 @@
-name: Docker Build and Compose Server
+name: Run Docker Compose
 
 on:
   push:
@@ -9,17 +9,13 @@ on:
       - main
 
 jobs:
-  build-and-compose:
+  run-compose:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Build server Docker image
-      run: |
-        docker build -t server:latest -f ./server/Dockerfile ./server
-
+      
     - name: Run docker-compose
       run: |
         docker-compose up -d

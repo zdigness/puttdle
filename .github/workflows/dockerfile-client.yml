@@ -1,4 +1,4 @@
-name: Docker Build and Compose Client
+name: Build Client Docker Image
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-compose:
+  build-client:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,8 +19,3 @@ jobs:
     - name: Build client Docker image
       run: |
         docker build -t client:latest -f ./client/Dockerfile ./client
-
-    - name: Run docker-compose
-      run: |
-        docker-compose up -d
-        docker-compose ps

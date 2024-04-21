@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server/src
+        working-directory: ./server
     steps:
       - name: Use Node.js 20.0
         uses: actions/setup-node@v4

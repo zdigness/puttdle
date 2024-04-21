@@ -1,0 +1,21 @@
+name: Build Server Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build server Docker image
+      run: |
+        docker build -t server:latest -f ./server/Dockerfile ./server
