@@ -7,7 +7,7 @@ const mapRouter = Router()
 mapRouter.get("/", async (req, res) => {
   try {
     const today = new Date()
-    console.log(today)
+    today.setUTCHours(0, 0, 0, 0)
     const mapExists: FullMap | null = await MapController.getMap(today)
 
     if (mapExists) {
