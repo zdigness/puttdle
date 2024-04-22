@@ -51,8 +51,8 @@ describe("MapController", () => {
 
       const today = new Date()
       // Create a new Date object with only the year, month, and day components
-      const date = today.toISOString().split("T")[0]
-      const parsedDate = new Date(date)
+      const dateString = today.toISOString().split("T")[0]
+      const parsedDate = new Date(dateString)
       const fullMap: FullMap | null = await MapController.getMap(parsedDate)
 
       expect(database.Map.findOne).toHaveBeenCalledWith({ where: { day: parsedDate } })
