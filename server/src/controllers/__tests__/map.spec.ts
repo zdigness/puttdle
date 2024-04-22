@@ -33,7 +33,10 @@ jest.mock("../../db/index", () => {
 describe("MapController", () => {
   describe("getMap", () => {
     it("should get a map", async () => {
-      const mockMap = { id: 1, day: new Date(), par: 3, hole_x: 1, hole_y: 1, ball_x: 1, ball_y: 1 }
+      const date = new Date()
+      date.setUTCHours(0, 0, 0, 0)
+      console.log(date)
+      const mockMap = { id: 1, day: date, par: 3, hole_x: 1, hole_y: 1, ball_x: 1, ball_y: 1 }
       const mockSandtraps = [{ id: 1, mapId: 1, x: 1, y: 1 }]
       const mockWater = [{ id: 1, mapId: 1, x: 1, y: 1 }]
       const mockBarriers = [{ id: 1, mapId: 1, x: 1, y: 1 }]
