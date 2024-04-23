@@ -63,18 +63,18 @@ describe("UserController", () => {
   })
 
   it("should create a user", async () => {
-    const mockUser: [{ id: number; email: string }, boolean] = [{ id: 1, email: "test@test.com" }, true]
-    const mockScore: [{ userId: number; score: number }, boolean] = [{ userId: 1, score: 0 }, true]
-    const expectedFullUser = { user: mockUser[0], scores: mockScore[0] }
+    const mockUser: [{ id: number; email: string; streak: 0 }, boolean] = [
+      { id: 1, email: "test@test.com", streak: 0 },
+      true,
+    ]
+    const expectedUser = mockUser[0]
 
     ;(database.User.findOrCreate as jest.Mock).mockResolvedValue(mockUser)
-    ;(database.Score.findOrCreate as jest.Mock).mockResolvedValue(mockScore)
 
     const fullUser = await UserController.createUser("test@test.com")
 
     expect(database.User.findOrCreate).toHaveBeenCalledWith({ where: { email: "test@test.com" } })
-    expect(database.Score.findOrCreate).toHaveBeenCalledWith({ where: { userId: mockUser[0].id } })
-    expect(fullUser).toEqual(expectedFullUser)
+    expect(fullUser).toEqual(expectedUser)
   })
 
   it("should not create a user because they already exist", async () => {
@@ -104,8 +104,10 @@ describe("UserController", () => {
   })
 
   it("should get a user", async () => {
-    const mockUser = { id: 1, email: "test@test.com" }
-    const mockScore = { userId: 1, score: 0 }
+    const date = new Date()
+    date.setUTCHours(0, 0, 0, 0)
+    const mockUser = { id: 1, email: "test@test.com", streak: 1 }
+    const mockScore = { userId: 1, score: 2, day: date }
     const expectedFullUser = { user: mockUser, scores: mockScore }
 
     ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
@@ -114,7 +116,7 @@ describe("UserController", () => {
     const fullUser = await UserController.getUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
-    expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id } })
+    expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id, day: date } })
     expect(fullUser).toEqual(expectedFullUser)
   })
 
@@ -131,6 +133,8 @@ describe("UserController", () => {
   })
 
   it("should return null when getting a user that exists but does not have a score", async () => {
+    const date = new Date()
+    date.setUTCHours(0, 0, 0, 0)
     const mockUser = { id: 1, email: "test@test.com" }
 
     // Mock the findOne method to return a user
@@ -141,7 +145,7 @@ describe("UserController", () => {
     const fullUser = await UserController.getUser(mockUser.email)
 
     expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
-    expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id } })
+    expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id, day: date } })
     expect(fullUser).toBeNull()
   })
 
@@ -157,5 +161,22 @@ describe("UserController", () => {
 
     expect(result).toBeNull()
     expect(consoleSpy).toHaveBeenCalled()
+  })
+
+  it("should return score when user has a score from today", async () => {
+    const date = new Date()
+    date.setUTCHours(0, 0, 0, 0)
+    const mockUser = { id: 1, email: "test@test.com", streak: 1 }
+    const mockScore = { userId: 1, score: 2, day: date }
+    const expectedFullUser = { user: mockUser, scores: mockScore }
+
+    ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
+    ;(database.Score.findOne as jest.Mock).mockResolvedValue(mockScore)
+
+    const fullUser = await UserController.getUser(mockUser.email)
+
+    expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
+    expect(database.Score.findOne).toHaveBeenCalledWith({ where: { userId: mockUser.id, day: date } })
+    expect(fullUser).toEqual(expectedFullUser)
   })
 })
