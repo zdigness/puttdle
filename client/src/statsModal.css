@@ -1,10 +1,10 @@
 .modal-content {
-    background-color: black;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    padding: 100px;
-    border-radius: 20px;
+  background-color: black;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 100px;
+  border-radius: 20px;
 }
 
 .modal-content h1 {
-    font-family: "Roboto Slab", serif;
+  font-family: "Roboto Slab", serif;
 }

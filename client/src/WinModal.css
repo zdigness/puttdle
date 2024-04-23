@@ -1,19 +1,19 @@
 .modalContent {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Center the modal */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    color: black;
-    z-index: 1001; /* Slightly above the overlay */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  color: black;
+  z-index: 1001; /* Slightly above the overlay */
 }
 
 .modalContent h2 {
-    font-family: "Roboto Slab", serif;
+  font-family: "Roboto Slab", serif;
 }
 
 .modalContent p {
-    font-family: "Roboto Slab", serif;
+  font-family: "Roboto Slab", serif;
 }

@@ -1,43 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Phaser from 'phaser';
-import config from './gameConfig';
-import WinModal from './WinModal';
+import React, { useEffect, useRef, useState } from "react"
+import Phaser from "phaser"
+import config from "./gameConfig"
+import WinModal from "./WinModal"
 
 const Puttdle: React.FC = () => {
-    const gameRef = useRef<Phaser.Game | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [score, setScore] = useState(10);
+  const gameRef = useRef<Phaser.Game | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [score, setScore] = useState(10)
 
-    useEffect(() => {
-        const game = new Phaser.Game(config);
-        gameRef.current = game;
+  useEffect(() => {
+    const game = new Phaser.Game(config)
+    gameRef.current = game
 
-        return () => {
-            game.destroy(true);
-        };
-    }, []);
-
-    useEffect(() => {
-        const game = gameRef.current;
-
-        game?.events.on('win', (data: { score: number }) => {
-            console.log('You win! Score:', data.score);
-            setScore(data.score);
-            setIsModalOpen(true);
-        });
+    return () => {
+      game.destroy(true)
     }
-    , [gameRef]);
+  }, [])
 
-    return (
-        <>
-            <div id="gameCanvas"></div>
-            { isModalOpen &&
-            <div className = "modal__overlay" onClick={() => setIsModalOpen(false)}>
-                <WinModal score={score}/>
-            </div>
-            }
-        </>
-    );
-};
+  useEffect(() => {
+    const game = gameRef.current
 
-export default Puttdle;
+    game?.events.on("win", (data: { score: number }) => {
+      console.log("You win! Score:", data.score)
+      setScore(data.score)
+      setIsModalOpen(true)
+    })
+  }, [gameRef])
+
+  return (
+    <>
+      <div id="gameCanvas"></div>
+      {isModalOpen && (
+        <div className="modal__overlay" onClick={() => setIsModalOpen(false)}>
+          <WinModal score={score} />
+        </div>
+      )}
+    </>
+  )
+}
+
+export default Puttdle

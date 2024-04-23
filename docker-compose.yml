@@ -1,10 +1,18 @@
 version: "3.8"
 
 services:
+  client:
+    container_name: client_container
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    command: ["npm", "run", "dev"]
   server:
     container_name: server_container
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
     environment:
       NODE_ENV: ${NODE_ENV}
