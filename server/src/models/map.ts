@@ -23,7 +23,7 @@ export class Map extends Model<Map> {
 
   @AllowNull(false)
   @Index("day-index")
-  @Column(DataType.DATEONLY)
+  @Column(DataType.DATE)
   day!: Date
 
   @AllowNull(false)

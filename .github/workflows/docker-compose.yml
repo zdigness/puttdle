@@ -1,0 +1,22 @@
+name: Run Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run docker-compose
+      run: |
+        docker-compose up -d
+        docker-compose ps

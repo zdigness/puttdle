@@ -1,0 +1,35 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "@stylistic",
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2022
+  },
+  "rules": {
+    "@stylistic/object-curly-spacing": ["error", "always"],
+    "@stylistic/no-multi-spaces": ["error"],
+    "@typescript-eslint/no-var-requires": "off",
+    "no-prototype-builtins": "off",
+    "prettier/prettier": [
+      "error",
+      {},
+      {
+        "usePrettierrc": true,
+        "endOfLine": "auto"
+      }
+    ]
+  },
+  "env": {
+    "node": true
+  }
+}

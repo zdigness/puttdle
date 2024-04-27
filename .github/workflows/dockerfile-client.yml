@@ -1,0 +1,21 @@
+name: Build Client Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-client:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build client Docker image
+      run: |
+        docker build -t client:latest -f ./client/Dockerfile ./client
