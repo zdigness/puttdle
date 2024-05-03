@@ -71,10 +71,10 @@ describe("UserController", () => {
 
     ;(database.User.findOrCreate as jest.Mock).mockResolvedValue(mockUser)
 
-    const fullUser = await UserController.createUser("test@test.com")
+    const user = await UserController.createUser("test@test.com")
 
     expect(database.User.findOrCreate).toHaveBeenCalledWith({ where: { email: "test@test.com" } })
-    expect(fullUser).toEqual(expectedUser)
+    expect(user).toEqual(expectedUser)
   })
 
   it("should not create a user because they already exist", async () => {
@@ -107,7 +107,7 @@ describe("UserController", () => {
     const date = new Date()
     date.setUTCHours(0, 0, 0, 0)
     const mockUser = { id: 1, email: "test@test.com", streak: 1 }
-    const mockScore = { userId: 1, score: 2, day: date }
+    const mockScore = { id: 1, userId: 1, score: 2, day: date }
     const expectedFullUser = { user: mockUser, scores: mockScore }
 
     ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
@@ -167,7 +167,7 @@ describe("UserController", () => {
     const date = new Date()
     date.setUTCHours(0, 0, 0, 0)
     const mockUser = { id: 1, email: "test@test.com", streak: 1 }
-    const mockScore = { userId: 1, score: 2, day: date }
+    const mockScore = { id: 1, userId: 1, score: 2, day: date }
     const expectedFullUser = { user: mockUser, scores: mockScore }
 
     ;(database.User.findOne as jest.Mock).mockResolvedValue(mockUser)
