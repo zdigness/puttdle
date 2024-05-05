@@ -12,14 +12,13 @@ userRouter.post("/", async (req, res) => {
     if (userExists) {
       const fullUser: FullUser | null = await UserController.getUser(user.email)
       console.log(fullUser?.user.email)
-      console.log(fullUser?.scores.streak)
-      console.log(fullUser?.scores.total)
+      console.log(fullUser?.user.streak)
+      console.log(fullUser?.scores.score)
       res.status(200).send(fullUser)
     } else {
-      const newUser: FullUser | null = await UserController.createUser(user.email)
-      console.log(newUser?.user.email)
-      console.log(newUser?.scores.streak)
-      console.log(newUser?.scores.total)
+      const newUser: User | null = await UserController.createUser(user.email)
+      console.log(newUser?.email)
+      console.log(newUser?.streak)
       res.status(200).send(newUser)
     }
   } catch (e) {
