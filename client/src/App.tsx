@@ -82,7 +82,7 @@ function App() {
     /* global google */
     google.accounts.id.initialize({
       client_id: "7109401546-mgi2m2lcplmdckrmn4smdqpa17iu7ml9.apps.googleusercontent.com",
-      callback: handleCallbackResponse,
+      callback: () => handleCallbackResponse(undefined),
     })
 
     google.accounts.id.renderButton(document.getElementById("login"), {
