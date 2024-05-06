@@ -11,9 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
     env:
       NODE_ENV: "development"
       DB_HOST: "db"
@@ -23,6 +20,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Create env file
+        run: |
+          cd server
+          touch .env
+          echo NODE_ENV="development" >> .env
+          echo DB_HOST="db" >> .env
+          echo DB_USER="postgres" >> .env
+          echo DB_PASS="postgrepassword" >> .env
+          echo DB_NAME="puttdle_dev" >> .env
+          cat .env
 
       - name: Docker compose up
         run: docker-compose up -d --build
