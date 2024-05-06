@@ -14,9 +14,15 @@ export default class MapController {
         throw Error("Map does not exist")
       }
 
-      const sandtraps: Sandtrap[] = await db.Sandtrap.findAll({ where: { mapId: retrievedMap.id } })
-      const water: Water[] = await db.Water.findAll({ where: { mapId: retrievedMap.id } })
-      const barriers: Barrier[] = await db.Barrier.findAll({ where: { mapId: retrievedMap.id } })
+      const sandtraps: Sandtrap[] = await db.Sandtrap.findAll({
+        where: { mapId: retrievedMap.id },
+      })
+      const water: Water[] = await db.Water.findAll({
+        where: { mapId: retrievedMap.id },
+      })
+      const barriers: Barrier[] = await db.Barrier.findAll({
+        where: { mapId: retrievedMap.id },
+      })
 
       return {
         map: retrievedMap,

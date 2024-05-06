@@ -36,7 +36,15 @@ describe("MapController", () => {
       const date = new Date()
       date.setUTCHours(0, 0, 0, 0)
       console.log(date)
-      const mockMap = { id: 1, day: date, par: 3, hole_x: 1, hole_y: 1, ball_x: 1, ball_y: 1 }
+      const mockMap = {
+        id: 1,
+        day: date,
+        par: 3,
+        hole_x: 1,
+        hole_y: 1,
+        ball_x: 1,
+        ball_y: 1,
+      }
       const mockSandtraps = [{ id: 1, mapId: 1, x: 1, y: 1 }]
       const mockWater = [{ id: 1, mapId: 1, x: 1, y: 1 }]
       const mockBarriers = [{ id: 1, mapId: 1, x: 1, y: 1 }]
@@ -58,10 +66,18 @@ describe("MapController", () => {
       const parsedDate = new Date(dateString)
       const fullMap: FullMap | null = await MapController.getMap(parsedDate)
 
-      expect(database.Map.findOne).toHaveBeenCalledWith({ where: { day: parsedDate } })
-      expect(database.Sandtrap.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
-      expect(database.Water.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
-      expect(database.Barrier.findAll).toHaveBeenCalledWith({ where: { mapId: 1 } })
+      expect(database.Map.findOne).toHaveBeenCalledWith({
+        where: { day: parsedDate },
+      })
+      expect(database.Sandtrap.findAll).toHaveBeenCalledWith({
+        where: { mapId: 1 },
+      })
+      expect(database.Water.findAll).toHaveBeenCalledWith({
+        where: { mapId: 1 },
+      })
+      expect(database.Barrier.findAll).toHaveBeenCalledWith({
+        where: { mapId: 1 },
+      })
       expect(fullMap).toEqual(expectedFullMap)
     })
 
