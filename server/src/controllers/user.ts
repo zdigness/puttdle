@@ -15,7 +15,7 @@ export default class UserController {
     }
   }
 
-  static async createUser(email: User["email"]): Promise<FullUser | null> {
+  static async createUser(email: User["email"]): Promise<User | null> {
     try {
       // Check if user exists, otherwise create them
       const createdUser: [User, boolean] = await db.User.findOrCreate({
@@ -25,15 +25,7 @@ export default class UserController {
       if (!createdUser[1]) {
         throw Error("User already exists")
       }
-
-      const userScore: [Score, boolean] = await db.Score.findOrCreate({
-        where: { userId: createdUser[0].id },
-      })
-
-      return {
-        user: createdUser[0],
-        scores: userScore[0],
-      }
+      return createdUser[0]
     } catch (e) {
       console.error(e)
       return null
@@ -50,9 +42,9 @@ export default class UserController {
         throw Error("User does not exist")
       }
 
-      const scores: Score | null = await db.Score.findOne({
-        where: { userId: retrievedUser.id },
-      })
+      const date = new Date()
+      date.setUTCHours(0, 0, 0, 0)
+      const scores: Score | null = await db.Score.findOne({ where: { userId: retrievedUser.id, day: date } })
 
       if (!scores) {
         throw Error(`Score does not exist for user ${retrievedUser.id}`)
