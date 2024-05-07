@@ -5,8 +5,11 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - "5173:5173"
     command: [ "npm", "run", "dev" ]
+    volumes:
+      - ./client:/usr/src/client
+      - /usr/src/client/node_modules
   server:
     container_name: server_container
     build:
@@ -19,6 +22,9 @@ services:
     depends_on:
       - db
     command: [ "npm", "run", "dev" ]
+    volumes:
+      - ./server:/usr/src/server
+      - /usr/src/server/node_modules
   db:
     image: postgres:latest
     container_name: postgres_container
