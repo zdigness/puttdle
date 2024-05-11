@@ -33,19 +33,25 @@ describe("UserController", () => {
 
     const user: User | null = await UserController.checkUser(mockUser.email)
 
-    expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
+    expect(database.User.findOne).toHaveBeenCalledWith({
+      where: { email: mockUser.email },
+    })
     expect(user).toEqual(mockUser)
   })
 
   it("should return null when checking a user that does not exist", async () => {
-    const mockUser = { email: "nonexistent@test.com" }
+    const mockUser = {
+      email: "nonexistent@test.com",
+    }
 
     // Mock the findOne method to return null
     ;(database.User.findOne as jest.Mock).mockResolvedValue(null)
 
     const user: User | null = await UserController.checkUser(mockUser.email)
 
-    expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
+    expect(database.User.findOne).toHaveBeenCalledWith({
+      where: { email: mockUser.email },
+    })
     expect(user).toBeNull()
   })
 
@@ -85,7 +91,9 @@ describe("UserController", () => {
 
     const fullUser = await UserController.createUser("test@test.com")
 
-    expect(database.User.findOrCreate).toHaveBeenCalledWith({ where: { email: "test@test.com" } })
+    expect(database.User.findOrCreate).toHaveBeenCalledWith({
+      where: { email: "test@test.com" },
+    })
     expect(fullUser).toBeNull()
   })
 
@@ -121,14 +129,18 @@ describe("UserController", () => {
   })
 
   it("should return null when getting a user that does not exist", async () => {
-    const mockUser = { email: "nonexistent@test.com" }
+    const mockUser = {
+      email: "nonexistent@test.com",
+    }
 
     // Mock the findOne method to return null
     ;(database.User.findOne as jest.Mock).mockResolvedValue(null)
 
     const fullUser = await UserController.getUser(mockUser.email)
 
-    expect(database.User.findOne).toHaveBeenCalledWith({ where: { email: mockUser.email } })
+    expect(database.User.findOne).toHaveBeenCalledWith({
+      where: { email: mockUser.email },
+    })
     expect(fullUser).toBeNull()
   })
 

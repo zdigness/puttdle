@@ -1,7 +1,7 @@
 FROM node:16-alpine
 
 # Set the working directory in the container to /app
-WORKDIR /app
+WORKDIR /usr/src/client
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
@@ -12,5 +12,5 @@ RUN npm install
 # Bundle app source inside Docker image
 COPY . .
 
-# Make port 4200 available to the world outside this container
-EXPOSE 4200
+# Make port 5173 available to the world outside this container
+EXPOSE 5173

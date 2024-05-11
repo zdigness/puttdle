@@ -6,7 +6,9 @@ import db from "../db"
 export default class UserController {
   static async checkUser(email: User["email"]): Promise<User | null> {
     try {
-      return await db.User.findOne({ where: { email } })
+      return await db.User.findOne({
+        where: { email },
+      })
     } catch (e) {
       console.error(e)
       return null
@@ -16,12 +18,13 @@ export default class UserController {
   static async createUser(email: User["email"]): Promise<User | null> {
     try {
       // Check if user exists, otherwise create them
-      const createdUser: [User, boolean] = await db.User.findOrCreate({ where: { email } })
+      const createdUser: [User, boolean] = await db.User.findOrCreate({
+        where: { email },
+      })
 
       if (!createdUser[1]) {
         throw Error("User already exists")
       }
-
       return createdUser[0]
     } catch (e) {
       console.error(e)
@@ -31,7 +34,9 @@ export default class UserController {
 
   static async getUser(email: User["email"]): Promise<Promise<FullUser> | null> {
     try {
-      const retrievedUser: User | null = await db.User.findOne({ where: { email } })
+      const retrievedUser: User | null = await db.User.findOne({
+        where: { email },
+      })
 
       if (!retrievedUser) {
         throw Error("User does not exist")
