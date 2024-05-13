@@ -3,7 +3,7 @@
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "plugins": ["@stylistic", "@typescript-eslint", "prettier"],
   "parser": "@typescript-eslint/parser",
-  // Specifies the ESLint parser
+  // Specifies the ESLint parser a
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2022
