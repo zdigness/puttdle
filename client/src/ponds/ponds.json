@@ -1,0 +1,12 @@
+{
+    "pond1": {
+        "name": "pond1",
+        "points": [0, 0, 20, 70, 100, 100, 80, 20],
+        "img": "img/pond1.png"
+    },
+    "pond2": {
+        "name": "pond2",
+        "points": [0, 0, 304, 100, 100, 80, 20],
+        "img": "img/pond2.png"
+    }
+}

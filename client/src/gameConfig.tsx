@@ -1,4 +1,5 @@
 import Phaser from "phaser"
+import ponds from "../src/ponds/ponds.json"
 
 const sizes = {
   width: window.innerWidth,
@@ -217,7 +218,9 @@ class GameScene extends Phaser.Scene {
     this.movingBarrier = new MovingBarrier(this, sizes.width / 2 - 400, sizes.height / 2, 25, 200)
 
     // pond
-    this.pond = new Pond(this, sizes.width / 2 - 100, sizes.height / 2 - 100, 50)
+    console.log(ponds["pond1"]["points"])
+    const polygon = this.add.polygon(sizes.width / 2 - 100, sizes.height / 2 - 100, ponds["pond1"]["points"], 0x00bfff)
+    this.pond = new Pond(this, sizes.width / 2, sizes.height / 2, 50)
 
     // hole
     this.hole = this.add.graphics({ fillStyle: { color: 0x000000 } })
