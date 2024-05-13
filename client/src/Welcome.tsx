@@ -4,7 +4,7 @@ function Welcome({ isWelcome, onPlayToggle }: { isWelcome: boolean; onPlayToggle
   return (
     <>
       <div className="container">
-        <img src="../public/assets/icons8-golf-100.png"></img>
+        <img src="icons8-golf-100.png"></img>
         <h1>PUTTDLE!</h1>
         <h2>New courses everyday</h2>
         <h2>Make a shot in the least strokes possible!</h2>
@@ -14,7 +14,7 @@ function Welcome({ isWelcome, onPlayToggle }: { isWelcome: boolean; onPlayToggle
         <p>© Good Vibes Inc. 2024</p>
         <div className="links">
           <a href="https://github.com/zdigness/puttdle/">
-            <img src="../public/assets/github.png"></img>
+            <img src="github.png"></img>
           </a>
         </div>
       </div>
