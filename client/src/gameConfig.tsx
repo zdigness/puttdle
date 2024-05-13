@@ -220,6 +220,8 @@ class GameScene extends Phaser.Scene {
     // pond
     console.log(ponds["pond1"]["points"])
     const polygon = this.add.polygon(sizes.width / 2 - 100, sizes.height / 2 - 100, ponds["pond1"]["points"], 0x00bfff)
+    this.physics.add.existing(polygon)
+
     this.pond = new Pond(this, sizes.width / 2, sizes.height / 2, 50)
 
     // hole
