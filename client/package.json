@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint --ext .ts ./src",
-    "lint:fix": "npm run prettier && npm run lint --fix",
+    "lint:fix": "pnpm prettier && pnpm run lint --fix",
     "prettier": "prettier --ignore-path .gitignore --write src",
     "preview": "vite preview"
   },
