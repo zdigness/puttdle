@@ -1,6 +1,6 @@
 import { Router } from "express"
-import MapController from "../controllers/map"
 import { FullMap } from "../types"
+import MapController from "../controllers/map"
 
 const mapRouter = Router()
 

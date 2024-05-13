@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react"
 import Puttdle from "./Puttdle"
-import { jwtDecode, JwtPayload } from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 import "./App.css"
 import Welcome from "./Welcome"
 import QuestionModal from "./questionModal"
@@ -32,23 +32,28 @@ function App() {
     setIsStatsOpen(false)
   }
 
+  interface JwtPayload {
+    email: string
+  }
+
   function handleCallbackResponse(response: any) {
     const decoded = jwtDecode<JwtPayload>(response.credential)
+    const email = decoded.email
     setUser(decoded)
     const loginElement = document.getElementById("login")
     if (loginElement) {
       loginElement.hidden = true
     }
-    handleLoginSuccess(decoded)
+    handleLoginSuccess(email)
   }
 
-  function handleLoginSuccess(response: any) {
-    fetch("http://localhost:3000/api/google-login", {
+  function handleLoginSuccess(email: string) {
+    fetch("http://localhost:3000/api/v1/google-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(response),
+      body: JSON.stringify({ email }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -78,11 +83,25 @@ function App() {
     setLoggedIn(false)
   }
 
+  function handlePuttdleScore() {
+    fetch("http://localhost:3000/api/v1/score", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setScore(data.score)
+        setStreak(data.streak)
+      })
+  }
+
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: "7109401546-mgi2m2lcplmdckrmn4smdqpa17iu7ml9.apps.googleusercontent.com",
-      callback: () => handleCallbackResponse(undefined),
+      callback: handleCallbackResponse,
     })
 
     google.accounts.id.renderButton(document.getElementById("login"), {
@@ -125,7 +144,7 @@ function App() {
               </div>
             </header>
             <main>
-              <Puttdle />
+              <Puttdle onAction={handlePuttdleScore} />
             </main>
             <footer>
               <p>Created by Good Vibes Inc.</p>

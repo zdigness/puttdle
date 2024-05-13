@@ -1,6 +1,7 @@
 import { Router } from "express"
 import userRouter from "./user"
 import mapRouter from "./map"
+import scoreRouter from "./score"
 
 const appRouter = Router()
 
@@ -12,6 +13,10 @@ const appRoutes = [
   {
     path: "/map",
     router: mapRouter,
+  },
+  {
+    path: "/score",
+    router: scoreRouter,
   },
 ]
 

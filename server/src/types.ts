@@ -17,4 +17,9 @@ interface FullMap {
   barriers: Barrier[]
 }
 
-export { FullUser, FullMap }
+interface FullStats {
+  score: number
+  streak: number
+}
+
+export { FullUser, FullMap, FullStats }
