@@ -43,7 +43,7 @@ function App() {
   }
 
   function handleLoginSuccess(response: any) {
-    fetch("http://localhost:3000/api/google-login", {
+    fetch("http://localhost:3000/api/v1/users/google-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
