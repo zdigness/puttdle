@@ -5,7 +5,7 @@ import UserController from "../controllers/user"
 
 const userRouter = Router()
 
-userRouter.post("/", async (req, res) => {
+userRouter.post("/google-login", async (req, res) => {
   const user: User = req.body
   try {
     const userExists: User | null = await UserController.checkUser(user?.email)

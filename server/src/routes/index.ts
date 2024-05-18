@@ -6,7 +6,7 @@ const appRouter = Router()
 
 const appRoutes = [
   {
-    path: "/google-login",
+    path: "/users",
     router: userRouter,
   },
   {
